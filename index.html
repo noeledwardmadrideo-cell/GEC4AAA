@@ -1,0 +1,3779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>George Dantzig: The Architect of Optimization</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0e1a;
+            --bg-card: #111827;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #8b5cf6;
+            --accent-gold: #f59e0b;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --text-muted: #9ca3af;
+            --border-subtle: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Pro', serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.7;
+            cursor: none;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent-primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transition: all 0.15s ease;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-follower {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.3s ease;
+            mix-blend-mode: difference;
+        }
+
+        /* Particle Background */
+        .particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(59, 130, 246, 0.4);
+            border-radius: 50%;
+            animation: particleFloat 20s infinite ease-in-out;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1);
+                opacity: 0;
+            }
+            10%, 90% {
+                opacity: 1;
+            }
+            50% { 
+                transform: translate(var(--tx), var(--ty)) scale(1.5);
+            }
+        }
+
+        /* Animated Background Gradients */
+        .bg-animated {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(245, 158, 11, 0.1) 0%, transparent 50%);
+            animation: bgMove 15s ease-in-out infinite;
+        }
+
+        @keyframes bgMove {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -30px) scale(1.1); }
+            66% { transform: translate(-30px, 50px) scale(0.9); }
+        }
+
+        /* Grid with perspective */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+            perspective: 1000px;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+
+        /* Hero Section with 3D effect */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 2rem;
+            perspective: 1000px;
+        }
+
+        .floating-equations {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .equation {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            color: rgba(59, 130, 246, 0.3);
+            font-size: 1.5rem;
+            animation: float 15s ease-in-out infinite;
+            opacity: 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .equation:hover {
+            color: rgba(245, 158, 11, 0.8);
+            transform: scale(1.5) !important;
+            text-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+        }
+
+        .equation:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .equation:nth-child(2) { top: 20%; right: 15%; animation-delay: 2s; }
+        .equation:nth-child(3) { top: 60%; left: 20%; animation-delay: 4s; }
+        .equation:nth-child(4) { top: 70%; right: 10%; animation-delay: 6s; }
+        .equation:nth-child(5) { top: 40%; left: 50%; animation-delay: 3s; }
+        .equation:nth-child(6) { top: 80%; left: 60%; animation-delay: 5s; }
+        .equation:nth-child(7) { top: 15%; left: 40%; animation-delay: 1s; }
+        .equation:nth-child(8) { top: 85%; right: 30%; animation-delay: 7s; }
+        .equation:nth-child(9) { top: 50%; right: 20%; animation-delay: 5.5s; }
+        .equation:nth-child(10) { top: 30%; left: 70%; animation-delay: 2.5s; }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg) translateZ(0);
+                opacity: 0;
+            }
+            10%, 90% {
+                opacity: 1;
+            }
+            50% { 
+                transform: translateY(-50px) rotate(10deg) translateZ(50px);
+                opacity: 0.7;
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 1200px;
+            animation: fadeInUp 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #f9fafb 0%, #3b82f6 50%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 3s ease-in-out infinite, titleFloat 6s ease-in-out infinite;
+            background-size: 200% 200%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .hero-title:hover {
+            transform: scale(1.05) rotateX(10deg);
+            filter: drop-shadow(0 20px 40px rgba(59, 130, 246, 0.5));
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0) rotateX(0); }
+            50% { transform: translateY(-10px) rotateX(5deg); }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 2.5rem);
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-weight: 300;
+            animation: fadeInUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s backwards;
+        }
+
+        .hero-description {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            animation: fadeInUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.6s backwards;
+        }
+
+        /* Animated CTA Button */
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.9s backwards;
+            cursor: pointer;
+            border: none;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.4);
+        }
+
+        .cta-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .scroll-indicator:hover {
+            transform: translateX(-50%) scale(1.2);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        .scroll-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .scroll-arrow {
+            width: 2px;
+            height: 40px;
+            background: linear-gradient(to bottom, transparent, var(--accent-primary));
+            animation: arrowPulse 2s infinite;
+        }
+
+        @keyframes arrowPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Section Styles with stagger */
+        section {
+            padding: 8rem 0;
+            opacity: 0;
+            transform: translateY(80px) scale(0.95);
+            transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1), 
+                        transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Section background decorations */
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+            animation: sectionGlow 10s ease-in-out infinite;
+        }
+
+        @keyframes sectionGlow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-gold));
+            transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        section.visible .section-title::after {
+            width: 100%;
+        }
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            margin-bottom: 4rem;
+            max-width: 600px;
+        }
+
+        /* Interactive Timeline with enhanced effects */
+        .timeline {
+            position: relative;
+            padding: 4rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 2px;
+            height: 0;
+            background: linear-gradient(to bottom, 
+                transparent, 
+                var(--accent-primary) 10%, 
+                var(--accent-primary) 90%, 
+                transparent);
+            transform: translateX(-50%);
+            transition: height 2s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+
+        section.visible .timeline::before {
+            height: 100%;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 6rem;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transform: translateX(-50px) scale(0.9);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        section.visible .timeline-item {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+
+        section.visible .timeline-item:nth-child(1) { transition-delay: 0.2s; }
+        section.visible .timeline-item:nth-child(2) { transition-delay: 0.4s; }
+        section.visible .timeline-item:nth-child(3) { transition-delay: 0.6s; }
+        section.visible .timeline-item:nth-child(4) { transition-delay: 0.8s; }
+        section.visible .timeline-item:nth-child(5) { transition-delay: 1s; }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            text-align: right;
+        }
+
+        .timeline-content {
+            width: 45%;
+            padding: 2.5rem;
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 1.5rem;
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary), var(--accent-gold));
+            border-radius: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: -1;
+        }
+
+        .timeline-content:hover::before {
+            opacity: 1;
+        }
+
+        .timeline-content::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .timeline-content:hover::after {
+            left: 100%;
+        }
+
+        .timeline-content:hover {
+            transform: scale(1.08) translateY(-10px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 30px 80px rgba(59, 130, 246, 0.3);
+        }
+
+        .timeline-year {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--accent-gold);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover .timeline-year {
+            background: rgba(245, 158, 11, 0.2);
+            transform: scale(1.1);
+        }
+
+        .timeline-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            transition: color 0.3s ease;
+        }
+
+        .timeline-content:hover .timeline-title {
+            color: var(--accent-primary);
+        }
+
+        .timeline-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .timeline-node {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border: 5px solid var(--bg-dark);
+            border-radius: 50%;
+            z-index: 2;
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .timeline-node::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            background: rgba(59, 130, 246, 0.3);
+            border-radius: 50%;
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .timeline-item:hover .timeline-node::before {
+            width: 60px;
+            height: 60px;
+            animation: ripple 1.5s infinite;
+        }
+
+        @keyframes ripple {
+            0% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+            }
+            100% {
+                box-shadow: 0 0 0 20px rgba(59, 130, 246, 0);
+            }
+        }
+
+        .timeline-item:hover .timeline-node {
+            background: var(--accent-gold);
+            transform: translateX(-50%) scale(1.5) rotate(180deg);
+            box-shadow: 0 0 40px rgba(245, 158, 11, 0.8);
+        }
+
+        /* Simplex Method with 3D cards */
+        .simplex-visual {
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 1.5rem;
+            padding: 4rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .simplex-visual::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .simplex-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .simplex-step {
+            padding: 2.5rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05));
+            border: 1px solid var(--border-subtle);
+            border-radius: 1.5rem;
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transform-style: preserve-3d;
+        }
+
+        .simplex-step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-gold));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .simplex-step:hover::before {
+            transform: scaleX(1);
+        }
+
+        .simplex-step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent);
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            transition: all 0.6s ease;
+        }
+
+        .simplex-step:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .simplex-step:hover {
+            transform: translateY(-15px) rotateX(10deg);
+            border-color: var(--accent-primary);
+            box-shadow: 0 30px 80px rgba(59, 130, 246, 0.3);
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .simplex-step:hover .step-number {
+            transform: scale(1.2) rotate(360deg);
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-secondary));
+        }
+
+        .step-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .simplex-step:hover .step-title {
+            color: var(--accent-primary);
+            transform: translateX(10px);
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Enhanced Interactive Slider */
+        .interactive-demo {
+            margin: 4rem 0;
+            padding: 4rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border: 2px solid var(--border-subtle);
+            border-radius: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .interactive-demo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            animation: demoGlow 8s ease-in-out infinite;
+        }
+
+        @keyframes demoGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .demo-title {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .slider-container {
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .slider {
+            width: 100%;
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, 
+                rgba(59, 130, 246, 0.2) 0%, 
+                rgba(139, 92, 246, 0.2) 50%, 
+                rgba(245, 158, 11, 0.2) 100%);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            position: relative;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-gold));
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.6);
+            transition: all 0.3s ease;
+            border: 3px solid white;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+            box-shadow: 0 8px 30px rgba(245, 158, 11, 0.8);
+        }
+
+        .slider::-webkit-slider-thumb:active {
+            transform: scale(1.5);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-gold));
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.6);
+            border: 3px solid white;
+            transition: all 0.3s ease;
+        }
+
+        .slider::-moz-range-thumb:hover {
+            transform: scale(1.3);
+            box-shadow: 0 8px 30px rgba(245, 158, 11, 0.8);
+        }
+
+        .visualization-canvas {
+            width: 100%;
+            height: 400px;
+            background: rgba(10, 14, 26, 0.9);
+            border-radius: 1.5rem;
+            border: 2px solid var(--border-subtle);
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 50px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Applications with magnetic hover */
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 4rem;
+        }
+
+        .app-card {
+            padding: 3rem;
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--border-subtle);
+            border-radius: 2rem;
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                from 0deg,
+                transparent,
+                rgba(59, 130, 246, 0.1),
+                transparent 60deg
+            );
+            animation: rotate 4s linear infinite;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .app-card:hover::before {
+            opacity: 1;
+        }
+
+        .app-card::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: var(--bg-card);
+            border-radius: 1.8rem;
+            z-index: 0;
+        }
+
+        .app-card:hover {
+            transform: translateY(-20px) scale(1.05);
+            border-color: var(--accent-primary);
+            box-shadow: 0 40px 100px rgba(59, 130, 246, 0.4);
+        }
+
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.3);
+        }
+
+        .app-card:hover .app-icon {
+            transform: rotate(15deg) scale(1.2);
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-secondary));
+            box-shadow: 0 15px 50px rgba(245, 158, 11, 0.5);
+        }
+
+        .app-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            color: var(--text-primary);
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .app-card:hover .app-title {
+            color: var(--accent-primary);
+        }
+
+        .app-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Story with animated quote */
+        .story-card {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(139, 92, 246, 0.15));
+            border: 3px solid var(--accent-gold);
+            border-radius: 2rem;
+            padding: 4rem;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-card::before {
+            content: '"';
+            position: absolute;
+            top: -40px;
+            left: 30px;
+            font-size: 200px;
+            font-family: 'Playfair Display', serif;
+            color: rgba(245, 158, 11, 0.2);
+            line-height: 1;
+            animation: quoteFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes quoteFloat {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .story-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--accent-gold);
+            position: relative;
+            z-index: 1;
+        }
+
+        .story-content {
+            font-size: 1.3rem;
+            line-height: 2;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Fun Facts - Simple Cards */
+        .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 4rem;
+        }
+
+        .fact-card {
+            padding: 2.5rem;
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--border-subtle);
+            border-radius: 1.5rem;
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .fact-card:hover::before {
+            left: 100%;
+        }
+
+        .fact-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+        }
+
+        .fact-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .fact-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--accent-primary);
+            transition: all 0.3s ease;
+        }
+
+        .fact-card:hover .fact-title {
+            color: var(--accent-gold);
+        }
+
+        .fact-text {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Enhanced Quiz */
+        .quiz-container {
+            max-width: 900px;
+            margin: 4rem auto;
+            padding: 4rem;
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--border-subtle);
+            border-radius: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.1), transparent 50%);
+            pointer-events: none;
+        }
+
+        .quiz-question {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 3rem;
+            color: var(--text-primary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-option {
+            padding: 2rem;
+            background: rgba(59, 130, 246, 0.05);
+            border: 2px solid var(--border-subtle);
+            border-radius: 1.2rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-option::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transition: width 0.4s ease;
+            opacity: 0.2;
+        }
+
+        .quiz-option:hover::before {
+            width: 100%;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--accent-primary);
+            background: rgba(59, 130, 246, 0.15);
+            transform: translateX(15px) scale(1.02);
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.2);
+        }
+
+        .quiz-option.correct {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.2);
+            animation: correctAnswer 0.8s ease;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.2);
+            animation: shake 0.6s ease;
+        }
+
+        @keyframes correctAnswer {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.05); }
+            50% { transform: scale(0.98); }
+            75% { transform: scale(1.03); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+
+        .quiz-feedback {
+            margin-top: 2rem;
+            padding: 2rem;
+            border-radius: 1.2rem;
+            font-size: 1.2rem;
+            opacity: 0;
+            transform: translateY(-20px) scale(0.9);
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .quiz-feedback.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .quiz-feedback.correct-feedback {
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px solid #10b981;
+            color: #10b981;
+        }
+
+        .quiz-feedback.incorrect-feedback {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid #ef4444;
+            color: #ef4444;
+        }
+
+        /* Legacy Stats with counter animation */
+        .legacy-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin: 4rem 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--border-subtle);
+            border-radius: 2rem;
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1), transparent);
+            transform: scale(0);
+            transition: transform 0.6s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scale(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-15px) scale(1.05);
+            border-color: var(--accent-primary);
+            box-shadow: 0 30px 80px rgba(59, 130, 246, 0.3);
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover .stat-number {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.5));
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Scroll Progress with rainbow effect */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(90deg, 
+                var(--accent-primary) 0%, 
+                var(--accent-secondary) 50%, 
+                var(--accent-gold) 100%);
+            transform-origin: left;
+            z-index: 1000;
+            transition: transform 0.1s ease-out;
+            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Info Box for Transportation Problem */
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px solid var(--accent-primary);
+            border-radius: 1.2rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .info-box h4 {
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-box li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .info-box li::before {
+            content: "→ ";
+            color: var(--accent-primary);
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                cursor: auto;
+            }
+
+            .custom-cursor,
+            .cursor-follower {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                flex-direction: column !important;
+                align-items: flex-start;
+                padding-left: 60px;
+            }
+
+            .timeline-content {
+                width: 100%;
+                text-align: left !important;
+            }
+
+            .timeline-node {
+                left: 20px;
+            }
+
+            section {
+                padding: 4rem 0;
+            }
+
+            .applications-grid,
+            .facts-grid,
+            .simplex-steps,
+            .legacy-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading animation for page */
+        @keyframes pageLoad {
+            0% {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        body {
+            animation: pageLoad 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Particle Container -->
+    <div class="particle-container" id="particleContainer"></div>
+
+    <!-- Animated Background -->
+    <div class="bg-animated"></div>
+    <div class="bg-grid"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="floating-equations">
+            <div class="equation" data-equation="1">max c<sup>T</sup>x</div>
+            <div class="equation" data-equation="2">Ax ≤ b</div>
+            <div class="equation" data-equation="3">x ≥ 0</div>
+            <div class="equation" data-equation="4">∇f(x) = 0</div>
+            <div class="equation" data-equation="5">λ<sub>i</sub> ≥ 0</div>
+            <div class="equation" data-equation="6">∑x<sub>i</sub> = 1</div>
+            <div class="equation" data-equation="7">min z = f(x)</div>
+            <div class="equation" data-equation="8">∂L/∂x = 0</div>
+            <div class="equation" data-equation="9">KKT conditions</div>
+            <div class="equation" data-equation="10">dual problem</div>
+        </div>
+
+        <div class="hero-content">
+            <h1 class="hero-title">George Dantzig</h1>
+            <p class="hero-subtitle">The Architect of Optimization</p>
+            <p class="hero-description">
+                The mathematician who transformed impossible problems into elegant solutions, 
+                revolutionizing logistics, economics, and the future of artificial intelligence.
+            </p>
+            <a href="#biography" class="cta-button">
+                <span>Explore His Legacy</span>
+            </a>
+        </div>
+
+        <div class="scroll-indicator" onclick="document.querySelector('#biography').scrollIntoView({behavior: 'smooth'})">
+            <span class="scroll-text">Scroll</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- Biography Timeline -->
+    <section id="biography">
+        <div class="container">
+            <h2 class="section-title">A Life of Innovation</h2>
+            <p class="section-subtitle">From curious student to optimization pioneer</p>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-year">1914</div>
+                        <h3 class="timeline-title">Early Beginnings</h3>
+                        <p class="timeline-description">
+                            Born in Portland, Oregon, to Russian immigrant parents. His father was a mathematician, 
+                            instilling an early love for numbers and problem-solving.
+                        </p>
+                    </div>
+                    <div class="timeline-node"></div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-year">1936-1939</div>
+                        <h3 class="timeline-title">Academic Excellence</h3>
+                        <p class="timeline-description">
+                            Earned his Ph.D. in mathematics from UC Berkeley. His dissertation focused on 
+                            statistical problems, laying the groundwork for his future optimization work.
+                        </p>
+                    </div>
+                    <div class="timeline-node"></div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-year">1941-1945</div>
+                        <h3 class="timeline-title">WWII Contributions</h3>
+                        <p class="timeline-description">
+                            Served as a civilian mathematician for the U.S. Air Force, tackling complex logistics 
+                            and planning problems that would inspire his greatest breakthrough.
+                        </p>
+                    </div>
+                    <div class="timeline-node"></div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-year">1947</div>
+                        <h3 class="timeline-title">The Simplex Method</h3>
+                        <p class="timeline-description">
+                            Developed the revolutionary Simplex algorithm for linear programming, solving 
+                            optimization problems that were previously considered unsolvable.
+                        </p>
+                    </div>
+                    <div class="timeline-node"></div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-year">1975-2005</div>
+                        <h3 class="timeline-title">Legacy & Recognition</h3>
+                        <p class="timeline-description">
+                            Received the National Medal of Science and numerous other honors. Continued 
+                            researching and teaching, inspiring generations of mathematicians and computer scientists.
+                        </p>
+                    </div>
+                    <div class="timeline-node"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simplex Method Explained -->
+    <section id="simplex">
+        <div class="container">
+            <h2 class="section-title">The Simplex Method</h2>
+            <p class="section-subtitle">Turning complexity into clarity through elegant mathematics</p>
+
+            <div class="simplex-visual">
+                <p style="font-size: 1.3rem; color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.9; position: relative; z-index: 1;">
+                    Imagine you're managing a factory with limited resources—time, materials, workers. 
+                    You want to maximize profit while staying within your constraints. The Simplex Method 
+                    systematically explores possible solutions, always moving toward the optimal answer.
+                </p>
+
+                <div class="simplex-steps">
+                    <div class="simplex-step">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">Define the Problem</h3>
+                        <p class="step-description">
+                            Set up your objective function (what you want to maximize or minimize) and 
+                            constraints (your limitations and requirements).
+                        </p>
+                    </div>
+
+                    <div class="simplex-step">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">Convert to Standard Form</h3>
+                        <p class="step-description">
+                            Transform all inequalities into equations by adding slack variables, 
+                            creating a mathematical framework for the algorithm.
+                        </p>
+                    </div>
+
+                    <div class="simplex-step">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">Find Initial Solution</h3>
+                        <p class="step-description">
+                            Start at a corner point of the feasible region—typically where all 
+                            decision variables equal zero.
+                        </p>
+                    </div>
+
+                    <div class="simplex-step">
+                        <div class="step-number">4</div>
+                        <h3 class="step-title">Test for Optimality</h3>
+                        <p class="step-description">
+                            Check if the current solution is optimal by examining the objective 
+                            function coefficients. If optimal, you're done!
+                        </p>
+                    </div>
+
+                    <div class="simplex-step">
+                        <div class="step-number">5</div>
+                        <h3 class="step-title">Pivot to Better Solution</h3>
+                        <p class="step-description">
+                            If not optimal, move to an adjacent corner point that improves the 
+                            objective function value—guaranteed to get closer to the answer.
+                        </p>
+                    </div>
+
+                    <div class="simplex-step">
+                        <div class="step-number">6</div>
+                        <h3 class="step-title">Iterate Until Optimal</h3>
+                        <p class="step-description">
+                            Repeat steps 4-5, systematically navigating corner points until 
+                            reaching the optimal solution. Efficiency guaranteed!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Demo -->
+            <div class="interactive-demo">
+                <h3 class="demo-title">🎮 Interactive Visualization: Resource Allocation</h3>
+                <p style="text-align: center; color: var(--text-muted); margin-bottom: 2.5rem; position: relative; z-index: 1;">
+                    Drag the slider to see how different resource levels affect optimal production
+                </p>
+                
+                <div class="slider-container">
+                    <label for="resourceSlider" style="display: block; margin-bottom: 1.5rem; color: var(--text-secondary); font-size: 1.2rem; text-align: center;">
+                        Available Resources: <span id="resourceValue" style="color: var(--accent-gold); font-weight: 600; font-size: 1.4rem;">50</span>%
+                    </label>
+                    <input type="range" min="0" max="100" value="50" class="slider" id="resourceSlider">
+                </div>
+
+                <div class="visualization-canvas" id="vizCanvas">
+                    <svg width="100%" height="100%" style="display: block;">
+                        <!-- Visualization will be drawn here via JavaScript -->
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Real-World Applications -->
+    <section id="applications">
+        <div class="container">
+            <h2 class="section-title">Real-World Impact</h2>
+            <p class="section-subtitle">Where Dantzig's algorithm transforms industries daily</p>
+
+            <div class="applications-grid">
+                <div class="app-card">
+                    <div class="app-icon">📦</div>
+                    <h3 class="app-title">Supply Chain & Logistics</h3>
+                    <p class="app-description">
+                        Companies like Amazon and FedEx use linear programming to optimize delivery routes, 
+                        warehouse locations, and inventory levels—saving billions annually.
+                    </p>
+                </div>
+
+                <div class="app-card">
+                    <div class="app-icon">💰</div>
+                    <h3 class="app-title">Financial Portfolio Optimization</h3>
+                    <p class="app-description">
+                        Wall Street firms apply the Simplex Method to balance risk and return, 
+                        managing trillions in assets through optimal portfolio allocation.
+                    </p>
+                </div>
+
+                <div class="app-card">
+                    <div class="app-icon">🏭</div>
+                    <h3 class="app-title">Manufacturing Efficiency</h3>
+                    <p class="app-description">
+                        Production planning, resource allocation, and scheduling—optimizing 
+                        everything from cars to semiconductors with maximum efficiency.
+                    </p>
+                </div>
+
+                <div class="app-card">
+                    <div class="app-icon">⚡</div>
+                    <h3 class="app-title">Energy & Power Grids</h3>
+                    <p class="app-description">
+                        Electrical grid operators use linear programming to balance supply and demand, 
+                        minimize costs, and integrate renewable energy sources.
+                    </p>
+                </div>
+
+                <div class="app-card">
+                    <div class="app-icon">🤖</div>
+                    <h3 class="app-title">Machine Learning & AI</h3>
+                    <p class="app-description">
+                        Modern AI relies on optimization techniques descended from Dantzig's work—from 
+                        training neural networks to reinforcement learning algorithms.
+                    </p>
+                </div>
+
+                <div class="app-card">
+                    <div class="app-icon">🎯</div>
+                    <h3 class="app-title">Military Planning</h3>
+                    <p class="app-description">
+                        Strategic resource allocation, logistics coordination, and operational 
+                        planning—optimizing defense operations since WWII.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Famous Story -->
+    <section id="story">
+        <div class="container">
+            <h2 class="section-title">The Legendary Homework</h2>
+            <p class="section-subtitle">When being late to class led to mathematical history</p>
+
+            <div class="story-card">
+                <h3 class="story-title">The Impossible Problems</h3>
+                <p class="story-content">
+                    As a graduate student at UC Berkeley, Dantzig arrived late to class one day. 
+                    He copied two problems from the blackboard, assuming they were homework assignments. 
+                    They seemed difficult, but he worked through them and submitted his solutions.<br><br>
+
+                    Weeks later, his professor informed him that those weren't homework problems—they were 
+                    two famous unsolved problems in statistics. Dantzig had solved both without knowing 
+                    they were "impossible."<br><br>
+
+                    This story, while slightly embellished over time, captures an essential truth: sometimes 
+                    our greatest breakthroughs come when we don't know what's supposed to be impossible. 
+                    Dantzig's career exemplified this fearless approach to problem-solving.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact & Legacy -->
+    <section id="legacy">
+        <div class="container">
+            <h2 class="section-title">Enduring Legacy</h2>
+            <p class="section-subtitle">How one algorithm continues to shape our world</p>
+
+            <div class="legacy-stats">
+                <div class="stat-card">
+                    <div class="stat-number" data-target="2">$2T+</div>
+                    <div class="stat-label">Annual Economic Impact</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-number" data-target="75">75+</div>
+                    <div class="stat-label">Years of Active Use</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Problems Solved Daily</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-number">#1</div>
+                    <div class="stat-label">Most Influential Algorithm</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 5rem; padding: 4rem; background: rgba(17, 24, 39, 0.6); backdrop-filter: blur(10px); border: 2px solid var(--border-subtle); border-radius: 2rem;">
+                <h3 style="font-size: 2.5rem; font-weight: 600; margin-bottom: 2.5rem; color: var(--text-primary);">
+                    Modern Applications
+                </h3>
+                <p style="font-size: 1.3rem; color: var(--text-secondary); line-height: 2; margin-bottom: 2rem;">
+                    Today, Dantzig's work underpins cutting-edge fields like:
+                </p>
+                <ul style="font-size: 1.2rem; color: var(--text-secondary); line-height: 2.2; margin-left: 2.5rem;">
+                    <li><strong style="color: var(--accent-primary);">Deep Learning:</strong> Optimization algorithms train the neural networks behind ChatGPT and self-driving cars</li>
+                    <li><strong style="color: var(--accent-primary);">Operations Research:</strong> Companies optimize everything from airline schedules to hospital staffing</li>
+                    <li><strong style="color: var(--accent-primary);">Game Theory:</strong> Finding Nash equilibria and optimal strategies in complex scenarios</li>
+                    <li><strong style="color: var(--accent-primary);">Computational Biology:</strong> Protein folding, genetic research, and drug discovery</li>
+                    <li><strong style="color: var(--accent-primary);">Climate Science:</strong> Optimizing carbon reduction strategies and resource allocation</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fun Facts -->
+    <section id="facts">
+        <div class="container">
+            <h2 class="section-title">Fascinating Facts</h2>
+            <p class="section-subtitle">The human side of a mathematical genius</p>
+
+            <div class="facts-grid">
+                <div class="fact-card">
+                    <div class="fact-icon">🎖️</div>
+                    <h3 class="fact-title">National Medal of Science</h3>
+                    <p class="fact-text">
+                        Received the National Medal of Science from President Gerald Ford in 1975, 
+                        the highest scientific honor in the United States.
+                    </p>
+                </div>
+
+                <div class="fact-card">
+                    <div class="fact-icon">📚</div>
+                    <h3 class="fact-title">Prolific Author</h3>
+                    <p class="fact-text">
+                        Published over 100 papers and his book "Linear Programming and Extensions" 
+                        remains a foundational text in operations research.
+                    </p>
+                </div>
+
+                <div class="fact-card">
+                    <div class="fact-icon">💡</div>
+                    <h3 class="fact-title">Initially Classified</h3>
+                    <p class="fact-text">
+                        The Simplex Method was initially classified by the U.S. military due to its 
+                        strategic importance during the Cold War era.
+                    </p>
+                </div>
+
+                <div class="fact-card">
+                    <div class="fact-icon">🎓</div>
+                    <h3 class="fact-title">Stanford Legend</h3>
+                    <p class="fact-text">
+                        Taught at Stanford University for over 40 years, inspiring countless students 
+                        who went on to revolutionize computer science and mathematics.
+                    </p>
+                </div>
+
+                <div class="fact-card">
+                    <div class="fact-icon">🏆</div>
+                    <h3 class="fact-title">John von Neumann Prize</h3>
+                    <p class="fact-text">
+                        Shared the 1975 John von Neumann Theory Prize, recognizing his fundamental 
+                        contributions to operations research and management science.
+                    </p>
+                </div>
+
+                <div class="fact-card">
+                    <div class="fact-icon">🌟</div>
+                    <h3 class="fact-title">Humble Genius</h3>
+                    <p class="fact-text">
+                        Despite developing one of the most important algorithms in history, Dantzig 
+                        remained humble, often crediting collaboration and persistence over genius.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Continuous Multi-Question Quiz -->
+    <section id="quiz">
+        <div class="container">
+            <h2 class="section-title">Test Your Knowledge</h2>
+            <p class="section-subtitle">Answer all 5 questions to test your Dantzig expertise</p>
+
+            <div class="quiz-container">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <span style="font-size: 1.2rem; color: var(--accent-gold);">
+                        Question <span id="currentQ">1</span> of 5 | Score: <span id="quizScore">0</span>/5
+                    </span>
+                </div>
+                
+                <div class="quiz-question" id="quizQuestion"></div>
+                <div class="quiz-options" id="quizOptionsContainer"></div>
+                <div class="quiz-feedback" id="quizFeedback"></div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="cta-button" id="nextQuizBtn" style="display: none;" onclick="nextQuizQuestion()">
+                        <span>Next Question →</span>
+                    </button>
+                    <div id="quizFinalScore" style="display: none; font-size: 1.8rem; color: var(--accent-gold); margin-top: 2rem;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WWII Transportation Problem Interactive -->
+    <section id="transportation">
+        <div class="container">
+            <h2 class="section-title">WWII Transportation Problem</h2>
+            <p class="section-subtitle">Interactive demonstration of the logistics problems Dantzig solved</p>
+
+            <div class="info-box">
+                <h4>📚 How This Works:</h4>
+                <ul>
+                    <li><strong>Blue Circles (Warehouses):</strong> The number inside shows available SUPPLY of goods/resources</li>
+                    <li><strong>Red Circles (Military Bases):</strong> The number inside shows required DEMAND for supplies</li>
+                    <li><strong>Gold Lines:</strong> Optimal shipping routes calculated by the algorithm</li>
+                    <li><strong>Cost Calculation:</strong> Based on distance × amount shipped × cost per unit (simulated at $0.05/unit/pixel)</li>
+                    <li><strong>Why Warehouses Go to 0:</strong> When you click "Solve Routes", the algorithm distributes ALL warehouse supplies to bases until either warehouses are empty OR all base demands are met—this shows the complete allocation!</li>
+                </ul>
+            </div>
+
+            <div style="margin: 3rem 0; padding: 3rem; background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(10px); border: 2px solid var(--accent-primary); border-radius: 2rem;">
+                <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.8;">
+                    During WWII, Dantzig worked on optimizing the transport of supplies from warehouses to military bases. 
+                    Click to place warehouses (blue) and bases (red), then solve to find optimal shipping routes!
+                </p>
+
+                <div style="width: 100%; height: 400px; background: rgba(10, 14, 26, 0.95); border-radius: 1.5rem; border: 2px solid var(--accent-primary); position: relative; overflow: hidden;">
+                    <canvas id="transportCanvas" width="800" height="400" style="display: block; width: 100%; height: 100%;"></canvas>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: center; flex-wrap: wrap;">
+                    <button class="cta-button" onclick="setTransportMode('warehouse')">
+                        <span>📦 Place Warehouse</span>
+                    </button>
+                    <button class="cta-button" onclick="setTransportMode('base')">
+                        <span>🎯 Place Base</span>
+                    </button>
+                    <button class="cta-button" onclick="solveTransport()">
+                        <span>✨ Solve Routes</span>
+                    </button>
+                    <button class="cta-button" onclick="resetTransport()" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3)); border: 2px solid var(--accent-primary);">
+                        <span>Reset</span>
+                    </button>
+                </div>
+
+                <div id="transportResult" style="margin-top: 2rem; padding: 2rem; background: rgba(59, 130, 246, 0.1); border-radius: 1rem; border: 2px solid var(--accent-primary); display: none;">
+                    <h4 style="font-size: 1.3rem; color: var(--accent-gold); margin-bottom: 1rem;">Optimal Solution:</h4>
+                    <p id="transportSolution" style="font-size: 1.1rem; color: var(--text-primary);"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diet Problem Solver -->
+    <section id="diet-problem">
+        <div class="container">
+            <h2 class="section-title">The Classic Diet Problem</h2>
+            <p class="section-subtitle">One of the first real-world applications of linear programming</p>
+
+            <div class="info-box">
+                <h4>🍎 The Challenge:</h4>
+                <ul>
+                    <li><strong>Goal:</strong> Find the cheapest combination of foods that meets your daily nutritional requirements</li>
+                    <li><strong>Constraints:</strong> Minimum protein, calories, vitamins, and other nutrients needed</li>
+                    <li><strong>Variables:</strong> How much of each food to buy</li>
+                    <li><strong>Historical Note:</strong> In 1945, the U.S. Army used this to plan cost-effective meals for soldiers!</li>
+                </ul>
+            </div>
+
+            <div style="margin: 3rem 0; padding: 3rem; background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(10px); border: 2px solid var(--accent-secondary); border-radius: 2rem;">
+                <h3 style="font-size: 1.8rem; color: var(--text-primary); margin-bottom: 2rem;">🥗 Build Your Optimal Diet</h3>
+                
+                <!-- Food Selection Grid -->
+                <div id="dietFoodGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+                    <!-- Foods will be dynamically generated -->
+                </div>
+
+                <!-- Nutritional Requirements -->
+                <div style="background: rgba(59, 130, 246, 0.1); padding: 2rem; border-radius: 1rem; margin-bottom: 2rem;">
+                    <h4 style="font-size: 1.5rem; color: var(--accent-gold); margin-bottom: 1.5rem;">Daily Requirements:</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                        <div>
+                            <label style="display: block; color: var(--text-secondary); margin-bottom: 0.5rem;">Minimum Calories:</label>
+                            <input type="number" id="minCalories" value="2000" min="1000" max="4000" style="width: 100%; padding: 0.8rem; background: rgba(10, 14, 26, 0.8); border: 2px solid var(--border-subtle); border-radius: 0.5rem; color: var(--text-primary); font-size: 1rem;">
+                        </div>
+                        <div>
+                            <label style="display: block; color: var(--text-secondary); margin-bottom: 0.5rem;">Minimum Protein (g):</label>
+                            <input type="number" id="minProtein" value="50" min="20" max="200" style="width: 100%; padding: 0.8rem; background: rgba(10, 14, 26, 0.8); border: 2px solid var(--border-subtle); border-radius: 0.5rem; color: var(--text-primary); font-size: 1rem;">
+                        </div>
+                        <div>
+                            <label style="display: block; color: var(--text-secondary); margin-bottom: 0.5rem;">Minimum Fiber (g):</label>
+                            <input type="number" id="minFiber" value="25" min="10" max="50" style="width: 100%; padding: 0.8rem; background: rgba(10, 14, 26, 0.8); border: 2px solid var(--border-subtle); border-radius: 0.5rem; color: var(--text-primary); font-size: 1rem;">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <button class="cta-button" onclick="solveDietProblem()">
+                        <span>🧮 Calculate Optimal Diet</span>
+                    </button>
+                </div>
+
+                <div id="dietResult" style="display: none; padding: 2.5rem; background: rgba(139, 92, 246, 0.15); border-radius: 1.5rem; border: 2px solid var(--accent-secondary);">
+                    <h4 style="font-size: 1.5rem; color: var(--accent-gold); margin-bottom: 1.5rem;">📊 Optimal Solution:</h4>
+                    <div id="dietSolution" style="font-size: 1.1rem; color: var(--text-primary);"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Corner Point Explorer -->
+    <section id="corner-explorer">
+        <div class="container">
+            <h2 class="section-title">Corner Point Explorer</h2>
+            <p class="section-subtitle">Visualize why the Simplex Method checks corner points</p>
+
+            <div class="info-box">
+                <h4>🔍 Key Insight:</h4>
+                <ul>
+                    <li><strong>Mathematical Theorem:</strong> For linear programming, the optimal solution ALWAYS occurs at a corner point (vertex) of the feasible region</li>
+                    <li><strong>Why This Matters:</strong> Instead of checking infinite points, we only need to check the corners!</li>
+                    <li><strong>The Simplex Method:</strong> Intelligently "walks" from corner to corner, always improving the objective function</li>
+                    <li><strong>Try It:</strong> Click corner points to see their values, watch the Simplex path, and adjust the problem</li>
+                </ul>
+            </div>
+
+            <div style="margin: 3rem 0; padding: 3rem; background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(10px); border: 2px solid var(--accent-gold); border-radius: 2rem;">
+                <h3 style="font-size: 1.8rem; color: var(--text-primary); margin-bottom: 2rem; text-align: center;">📐 Interactive Linear Programming Visualizer</h3>
+                
+                <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem; text-align: center;">
+                    Problem: Maximize <strong style="color: var(--accent-gold);">profit = 3x + 4y</strong> subject to constraints
+                </p>
+
+                <!-- Canvas for visualization -->
+                <div style="width: 100%; height: 500px; background: rgba(10, 14, 26, 0.95); border-radius: 1.5rem; border: 2px solid var(--accent-gold); position: relative; overflow: hidden; margin-bottom: 2rem;">
+                    <canvas id="cornerCanvas" width="800" height="500" style="display: block; width: 100%; height: 100%;"></canvas>
+                </div>
+
+                <!-- Controls -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div>
+                        <label style="display: block; color: var(--text-secondary); margin-bottom: 0.5rem;">Constraint 1: x + y ≤</label>
+                        <input type="range" id="constraint1" min="4" max="12" value="8" step="1" class="slider" oninput="updateCornerVisualization()">
+                        <span id="c1Value" style="color: var(--accent-gold); font-weight: bold; margin-left: 1rem;">8</span>
+                    </div>
+                    <div>
+                        <label style="display: block; color: var(--text-secondary); margin-bottom: 0.5rem;">Constraint 2: 2x + y ≤</label>
+                        <input type="range" id="constraint2" min="6" max="16" value="12" step="1" class="slider" oninput="updateCornerVisualization()">
+                        <span id="c2Value" style="color: var(--accent-gold); font-weight: bold; margin-left: 1rem;">12</span>
+                    </div>
+                    <div>
+                        <label style="display: block; color: var(--text-secondary); margin-bottom: 0.5rem;">Constraint 3: x ≤</label>
+                        <input type="range" id="constraint3" min="3" max="10" value="6" step="1" class="slider" oninput="updateCornerVisualization()">
+                        <span id="c3Value" style="color: var(--accent-gold); font-weight: bold; margin-left: 1rem;">6</span>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem;">
+                    <button class="cta-button" onclick="animateSimplexPath()">
+                        <span>▶️ Animate Simplex Path</span>
+                    </button>
+                    <button class="cta-button" onclick="toggleCornerLabels()">
+                        <span>🏷️ Toggle Corner Values</span>
+                    </button>
+                    <button class="cta-button" onclick="resetCornerExplorer()" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3)); border: 2px solid var(--accent-primary);">
+                        <span>Reset</span>
+                    </button>
+                </div>
+
+                <div id="cornerInfo" style="padding: 2rem; background: rgba(245, 158, 11, 0.1); border-radius: 1rem; border: 2px solid var(--accent-gold);">
+                    <h4 style="font-size: 1.3rem; color: var(--accent-gold); margin-bottom: 1rem;">📍 Current Information:</h4>
+                    <div id="cornerInfoContent" style="font-size: 1.1rem; color: var(--text-primary); line-height: 1.8;">
+                        Click on corner points to see their coordinates and objective function values!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Traveling Salesman Problem -->
+    <section id="tsp-challenge">
+        <div class="container">
+            <h2 class="section-title">Traveling Salesman Challenge</h2>
+            <p class="section-subtitle">Plan the optimal tour through city landmarks</p>
+
+            <div class="info-box">
+                <h4>🗺️ The Problem:</h4>
+                <ul>
+                    <li><strong>Goal:</strong> Find the shortest possible route that visits every landmark exactly once and returns to the starting point</li>
+                    <li><strong>Complexity:</strong> With just 10 landmarks, there are 181,440 possible routes! With 20 landmarks: 60,822,550,200,000,000 routes</li>
+                    <li><strong>Real-World Use:</strong> Delivery routes, tour planning, circuit board drilling, DNA sequencing, warehouse picking</li>
+                    <li><strong>Connection to Dantzig:</strong> While not directly solved by the Simplex Method, TSP motivated much of modern optimization theory</li>
+                    <li><strong>Try It:</strong> Select landmarks to visit, draw your best route, then see how it compares to the optimized solution!</li>
+                </ul>
+            </div>
+
+            <div style="margin: 3rem 0; padding: 3rem; background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(10px); border: 2px solid var(--accent-secondary); border-radius: 2rem;">
+                <h3 style="font-size: 1.8rem; color: var(--text-primary); margin-bottom: 2rem; text-align: center;">🌆 Plan Your City Tour</h3>
+                
+                <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem; text-align: center;">
+                    Select landmarks you want to visit, then find the shortest tour route!
+                </p>
+
+                <!-- Landmark Selection -->
+                <div style="background: rgba(59, 130, 246, 0.1); padding: 2rem; border-radius: 1rem; margin-bottom: 2rem;">
+                    <h4 style="font-size: 1.3rem; color: var(--accent-gold); margin-bottom: 1.5rem;">🏛️ Select Landmarks to Visit:</h4>
+                    <div id="landmarkSelection" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+                        <!-- Landmarks will be generated here -->
+                    </div>
+                </div>
+
+                <!-- Canvas for TSP Map -->
+                <div style="width: 100%; height: 600px; background: #e5e3df; border-radius: 1.5rem; border: 2px solid var(--accent-secondary); position: relative; overflow: hidden; margin-bottom: 2rem; box-shadow: inset 0 0 30px rgba(0,0,0,0.1);">
+                    <canvas id="tspCanvas" width="1000" height="600" style="display: block; width: 100%; height: 100%;"></canvas>
+                </div>
+
+                <!-- Controls -->
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem;">
+                    <button class="cta-button" onclick="setTSPMode('manual')">
+                        <span>✏️ Draw Your Route</span>
+                    </button>
+                    <button class="cta-button" onclick="solveTSP()">
+                        <span>🎯 Show Optimal Route</span>
+                    </button>
+                    <button class="cta-button" onclick="selectRandomLandmarks()">
+                        <span>🎲 Random Selection (6 landmarks)</span>
+                    </button>
+                    <button class="cta-button" onclick="resetTSP()" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3)); border: 2px solid var(--accent-primary);">
+                        <span>Reset</span>
+                    </button>
+                </div>
+
+                <!-- Stats Display -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div style="background: rgba(59, 130, 246, 0.15); padding: 1.5rem; border-radius: 1rem; border: 2px solid var(--accent-primary); text-align: center;">
+                        <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Landmarks Selected</div>
+                        <div id="tspCityCount" style="font-size: 2.5rem; font-weight: bold; color: var(--accent-primary);">0</div>
+                    </div>
+                    <div style="background: rgba(139, 92, 246, 0.15); padding: 1.5rem; border-radius: 1rem; border: 2px solid var(--accent-secondary); text-align: center;">
+                        <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Your Route Distance</div>
+                        <div id="tspManualDistance" style="font-size: 2.5rem; font-weight: bold; color: var(--accent-secondary);">-</div>
+                    </div>
+                    <div style="background: rgba(245, 158, 11, 0.15); padding: 1.5rem; border-radius: 1rem; border: 2px solid var(--accent-gold); text-align: center;">
+                        <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Optimal Distance</div>
+                        <div id="tspOptimalDistance" style="font-size: 2.5rem; font-weight: bold; color: var(--accent-gold);">-</div>
+                    </div>
+                </div>
+
+                <!-- Result Info -->
+                <div id="tspResult" style="display: none; padding: 2.5rem; background: rgba(139, 92, 246, 0.15); border-radius: 1.5rem; border: 2px solid var(--accent-secondary);">
+                    <h4 style="font-size: 1.5rem; color: var(--accent-gold); margin-bottom: 1.5rem;">🏆 Results:</h4>
+                    <div id="tspResultContent" style="font-size: 1.1rem; color: var(--text-primary); line-height: 1.8;"></div>
+                </div>
+
+                <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(59, 130, 246, 0.1); border-radius: 0.8rem; border-left: 4px solid var(--accent-primary);">
+                    <strong style="color: var(--accent-primary);">💡 Real-World Impact:</strong> 
+                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">
+                        FedEx, UPS, and Amazon solve TSP-like problems millions of times per day to optimize delivery routes. 
+                        A 1% improvement in route efficiency can save millions in fuel costs annually! This demo uses nearest-neighbor + 2-opt heuristic—
+                        real logistics companies use more sophisticated algorithms, but the principle is the same.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.custom-cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            setTimeout(() => {
+                cursorFollower.style.left = e.clientX + 'px';
+                cursorFollower.style.top = e.clientY + 'px';
+            }, 100);
+        });
+
+        // Cursor interactions
+        const interactiveElements = document.querySelectorAll('a, button, .quiz-option, .timeline-node, .app-card, .fact-card, .simplex-step, .timeline-content');
+        
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(1.5)';
+                cursorFollower.style.transform = 'scale(1.5)';
+            });
+            
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+                cursorFollower.style.transform = 'scale(1)';
+            });
+        });
+
+        // Create particles
+        function createParticles() {
+            const container = document.getElementById('particleContainer');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const startX = Math.random() * window.innerWidth;
+                const startY = Math.random() * window.innerHeight;
+                const tx = (Math.random() - 0.5) * 200;
+                const ty = (Math.random() - 0.5) * 200;
+                const delay = Math.random() * 10;
+                
+                particle.style.left = startX + 'px';
+                particle.style.top = startY + 'px';
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                particle.style.animationDelay = delay + 's';
+                
+                container.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Scroll Progress Bar
+        window.addEventListener('scroll', () => {
+            const scrollProgress = document.getElementById('scrollProgress');
+            const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = window.scrollY;
+            const progress = (scrolled / scrollable) * 100;
+            scrollProgress.style.transform = `scaleX(${progress / 100})`;
+            scrollProgress.style.width = '100%';
+        });
+
+        // Interactive Slider
+        const slider = document.getElementById('resourceSlider');
+        const resourceValue = document.getElementById('resourceValue');
+        const vizCanvas = document.querySelector('#vizCanvas svg');
+
+        slider.addEventListener('input', (e) => {
+            const value = e.target.value;
+            resourceValue.textContent = value;
+            updateVisualization(value);
+        });
+
+        function updateVisualization(value) {
+            vizCanvas.innerHTML = '';
+            
+            const width = vizCanvas.clientWidth;
+            const height = vizCanvas.clientHeight;
+            const padding = 50;
+            
+            // Create gradient background
+            const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+            const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+            gradient.setAttribute('id', 'areaGradient');
+            gradient.setAttribute('x1', '0%');
+            gradient.setAttribute('y1', '0%');
+            gradient.setAttribute('x2', '0%');
+            gradient.setAttribute('y2', '100%');
+            
+            const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+            stop1.setAttribute('offset', '0%');
+            stop1.setAttribute('stop-color', 'rgba(59, 130, 246, 0.4)');
+            
+            const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+            stop2.setAttribute('offset', '100%');
+            stop2.setAttribute('stop-color', 'rgba(139, 92, 246, 0.1)');
+            
+            gradient.appendChild(stop1);
+            gradient.appendChild(stop2);
+            defs.appendChild(gradient);
+            vizCanvas.appendChild(defs);
+            
+            // Grid lines
+            const gridGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            for (let i = 0; i <= 5; i++) {
+                const x = padding + (i * (width - 2 * padding) / 5);
+                const y = height - padding - (i * (height - 2 * padding) / 5);
+                
+                // Vertical grid lines
+                const vLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                vLine.setAttribute('x1', x);
+                vLine.setAttribute('y1', padding);
+                vLine.setAttribute('x2', x);
+                vLine.setAttribute('y2', height - padding);
+                vLine.setAttribute('stroke', 'rgba(255, 255, 255, 0.1)');
+                vLine.setAttribute('stroke-width', '1');
+                gridGroup.appendChild(vLine);
+                
+                // Horizontal grid lines
+                const hLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                hLine.setAttribute('x1', padding);
+                hLine.setAttribute('y1', y);
+                hLine.setAttribute('x2', width - padding);
+                hLine.setAttribute('y2', y);
+                hLine.setAttribute('stroke', 'rgba(255, 255, 255, 0.1)');
+                hLine.setAttribute('stroke-width', '1');
+                gridGroup.appendChild(hLine);
+            }
+            vizCanvas.appendChild(gridGroup);
+            
+            // Axes
+            const axisGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            
+            const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            xAxis.setAttribute('x1', padding);
+            xAxis.setAttribute('y1', height - padding);
+            xAxis.setAttribute('x2', width - padding);
+            xAxis.setAttribute('y2', height - padding);
+            xAxis.setAttribute('stroke', 'rgba(255, 255, 255, 0.5)');
+            xAxis.setAttribute('stroke-width', '3');
+            axisGroup.appendChild(xAxis);
+            
+            const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            yAxis.setAttribute('x1', padding);
+            yAxis.setAttribute('y1', padding);
+            yAxis.setAttribute('x2', padding);
+            yAxis.setAttribute('y2', height - padding);
+            yAxis.setAttribute('stroke', 'rgba(255, 255, 255, 0.5)');
+            yAxis.setAttribute('stroke-width', '3');
+            axisGroup.appendChild(yAxis);
+            
+            vizCanvas.appendChild(axisGroup);
+            
+            // Feasible region
+            const maxX = (value / 100) * (width - 2 * padding);
+            const maxY = (value / 100) * (height - 2 * padding);
+            
+            const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            polygon.setAttribute('points', `
+                ${padding},${height - padding}
+                ${padding + maxX},${height - padding}
+                ${padding + maxX * 0.5},${height - padding - maxY * 0.5}
+                ${padding},${height - padding - maxY}
+            `);
+            polygon.setAttribute('fill', 'url(#areaGradient)');
+            polygon.setAttribute('stroke', 'rgba(59, 130, 246, 0.8)');
+            polygon.setAttribute('stroke-width', '3');
+            
+            const animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+            animate.setAttribute('attributeName', 'opacity');
+            animate.setAttribute('values', '0.3;0.7;0.3');
+            animate.setAttribute('dur', '3s');
+            animate.setAttribute('repeatCount', 'indefinite');
+            polygon.appendChild(animate);
+            
+            vizCanvas.appendChild(polygon);
+            
+            // Optimal point
+            const optimalX = padding + maxX * 0.7;
+            const optimalY = height - padding - maxY * 0.7;
+            
+            // Glow effect
+            const glowCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            glowCircle.setAttribute('cx', optimalX);
+            glowCircle.setAttribute('cy', optimalY);
+            glowCircle.setAttribute('r', '15');
+            glowCircle.setAttribute('fill', 'none');
+            glowCircle.setAttribute('stroke', '#f59e0b');
+            glowCircle.setAttribute('stroke-width', '3');
+            glowCircle.setAttribute('opacity', '0.6');
+            
+            const pulseAnim = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+            pulseAnim.setAttribute('attributeName', 'r');
+            pulseAnim.setAttribute('values', '15;25;15');
+            pulseAnim.setAttribute('dur', '2s');
+            pulseAnim.setAttribute('repeatCount', 'indefinite');
+            
+            const opacityAnim = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+            opacityAnim.setAttribute('attributeName', 'opacity');
+            opacityAnim.setAttribute('values', '0.8;0;0.8');
+            opacityAnim.setAttribute('dur', '2s');
+            opacityAnim.setAttribute('repeatCount', 'indefinite');
+            
+            glowCircle.appendChild(pulseAnim);
+            glowCircle.appendChild(opacityAnim);
+            vizCanvas.appendChild(glowCircle);
+            
+            // Main point
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', optimalX);
+            circle.setAttribute('cy', optimalY);
+            circle.setAttribute('r', '12');
+            circle.setAttribute('fill', '#f59e0b');
+            circle.setAttribute('stroke', '#fbbf24');
+            circle.setAttribute('stroke-width', '4');
+            circle.style.filter = 'drop-shadow(0 0 10px #f59e0b)';
+            vizCanvas.appendChild(circle);
+            
+            // Label
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', optimalX + 20);
+            text.setAttribute('y', optimalY - 15);
+            text.setAttribute('fill', '#f59e0b');
+            text.setAttribute('font-size', '16');
+            text.setAttribute('font-weight', '700');
+            text.textContent = 'Optimal Solution';
+            text.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))';
+            vizCanvas.appendChild(text);
+            
+            // Axis labels
+            const xLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            xLabel.setAttribute('x', width - padding - 20);
+            xLabel.setAttribute('y', height - padding + 30);
+            xLabel.setAttribute('fill', 'rgba(255, 255, 255, 0.6)');
+            xLabel.setAttribute('font-size', '14');
+            xLabel.textContent = 'Product A';
+            vizCanvas.appendChild(xLabel);
+            
+            const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            yLabel.setAttribute('x', padding - 15);
+            yLabel.setAttribute('y', padding - 10);
+            yLabel.setAttribute('fill', 'rgba(255, 255, 255, 0.6)');
+            yLabel.setAttribute('font-size', '14');
+            yLabel.textContent = 'Product B';
+            vizCanvas.appendChild(yLabel);
+        }
+
+        updateVisualization(50);
+
+        // Multi-Question Quiz System
+        const quizData = [
+            {
+                question: "What year did George Dantzig develop the Simplex Method?",
+                options: ["1941", "1947", "1952", "1960"],
+                correct: 1,
+                explanation: "The Simplex Method was developed in 1947, revolutionizing optimization."
+            },
+            {
+                question: "What organization did Dantzig work for during WWII?",
+                options: ["U.S. Navy", "U.S. Air Force", "U.S. Army", "OSS"],
+                correct: 1,
+                explanation: "Dantzig worked as a civilian mathematician for the U.S. Air Force."
+            },
+            {
+                question: "What university did Dantzig teach at for over 40 years?",
+                options: ["MIT", "Harvard", "Stanford", "UC Berkeley"],
+                correct: 2,
+                explanation: "Dantzig was a professor at Stanford University from 1952-1997."
+            },
+            {
+                question: "What prestigious award did Dantzig receive in 1975?",
+                options: ["Nobel Prize", "National Medal of Science", "Fields Medal", "Turing Award"],
+                correct: 1,
+                explanation: "He received the National Medal of Science from President Gerald Ford."
+            },
+            {
+                question: "What type of problems does the Simplex Method solve?",
+                options: ["Differential equations", "Linear programming", "Prime factorization", "Graph coloring"],
+                correct: 1,
+                explanation: "The Simplex Method is specifically designed for linear programming optimization problems."
+            }
+        ];
+
+        let currentQuizQuestion = 0;
+        let quizScore = 0;
+        let quizAnswered = false;
+
+        function displayQuizQuestion() {
+            const q = quizData[currentQuizQuestion];
+            document.getElementById('currentQ').textContent = currentQuizQuestion + 1;
+            document.getElementById('quizScore').textContent = quizScore;
+            document.getElementById('quizQuestion').textContent = q.question;
+            
+            const optionsHTML = q.options.map((opt, i) => 
+                `<div class="quiz-option" onclick="checkQuizAnswer(${i})">
+                    <span style="position: relative; z-index: 1;">${opt}</span>
+                </div>`
+            ).join('');
+            
+            document.getElementById('quizOptionsContainer').innerHTML = optionsHTML;
+            const feedback = document.getElementById('quizFeedback');
+            feedback.style.display = 'none';
+            feedback.classList.remove('show');
+            document.getElementById('nextQuizBtn').style.display = 'none';
+            quizAnswered = false;
+        }
+
+        function checkQuizAnswer(selectedIndex) {
+            if (quizAnswered) return;
+            quizAnswered = true;
+
+            const q = quizData[currentQuizQuestion];
+            const options = document.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById('quizFeedback');
+
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+
+            if (selectedIndex === q.correct) {
+                quizScore++;
+                options[selectedIndex].classList.add('correct');
+                feedback.className = 'quiz-feedback correct-feedback show';
+                feedback.innerHTML = `<strong>✓ Correct!</strong> ${q.explanation}`;
+                createConfetti();
+            } else {
+                options[selectedIndex].classList.add('incorrect');
+                options[q.correct].classList.add('correct');
+                feedback.className = 'quiz-feedback incorrect-feedback show';
+                feedback.innerHTML = `<strong>✗ Incorrect.</strong> ${q.explanation}`;
+            }
+
+            feedback.style.display = 'block';
+            document.getElementById('quizScore').textContent = quizScore;
+
+            if (currentQuizQuestion < quizData.length - 1) {
+                document.getElementById('nextQuizBtn').style.display = 'inline-block';
+            } else {
+                showQuizFinalScore();
+            }
+        }
+
+        function nextQuizQuestion() {
+            currentQuizQuestion++;
+            displayQuizQuestion();
+        }
+
+        function showQuizFinalScore() {
+            setTimeout(() => {
+                const finalScoreDiv = document.getElementById('quizFinalScore');
+                const percentage = (quizScore / quizData.length * 100).toFixed(0);
+                let message = '';
+                
+                if (percentage >= 80) {
+                    message = `🎉 Outstanding! You scored ${quizScore}/${quizData.length}. You're a Dantzig expert!`;
+                } else if (percentage >= 60) {
+                    message = `👍 Well done! You scored ${quizScore}/${quizData.length}. You know your optimization history!`;
+                } else {
+                    message = `📚 You scored ${quizScore}/${quizData.length}. Keep exploring Dantzig's amazing legacy!`;
+                }
+                
+                finalScoreDiv.textContent = message;
+                finalScoreDiv.style.display = 'block';
+            }, 2000);
+        }
+
+        // Initialize quiz
+        displayQuizQuestion();
+
+        // Transportation Problem Visualization
+        const transportCanvas = document.getElementById('transportCanvas');
+        const transportCtx = transportCanvas ? transportCanvas.getContext('2d') : null;
+        let transportMode = 'warehouse';
+        let warehouses = [];
+        let bases = [];
+        let routes = [];
+
+        function setTransportMode(mode) {
+            transportMode = mode;
+        }
+
+        if (transportCanvas) {
+            transportCanvas.addEventListener('click', (e) => {
+                const rect = transportCanvas.getBoundingClientRect();
+                const scaleX = transportCanvas.width / rect.width;
+                const scaleY = transportCanvas.height / rect.height;
+                const x = (e.clientX - rect.left) * scaleX;
+                const y = (e.clientY - rect.top) * scaleY;
+
+                if (transportMode === 'warehouse') {
+                    warehouses.push({ x, y, supply: Math.floor(Math.random() * 50) + 50, originalSupply: 0 });
+                    warehouses[warehouses.length - 1].originalSupply = warehouses[warehouses.length - 1].supply;
+                } else {
+                    bases.push({ x, y, demand: Math.floor(Math.random() * 30) + 30 });
+                }
+
+                drawTransport();
+            });
+        }
+
+        function drawTransport() {
+            if (!transportCtx) return;
+            
+            transportCtx.clearRect(0, 0, transportCanvas.width, transportCanvas.height);
+
+            // Draw routes
+            routes.forEach(route => {
+                transportCtx.strokeStyle = 'rgba(245, 158, 11, 0.6)';
+                transportCtx.lineWidth = Math.max(2, route.amount / 10);
+                transportCtx.beginPath();
+                transportCtx.moveTo(route.from.x, route.from.y);
+                transportCtx.lineTo(route.to.x, route.to.y);
+                transportCtx.stroke();
+                
+                // Draw amount on line
+                const midX = (route.from.x + route.to.x) / 2;
+                const midY = (route.from.y + route.to.y) / 2;
+                transportCtx.fillStyle = '#f59e0b';
+                transportCtx.font = 'bold 12px sans-serif';
+                transportCtx.textAlign = 'center';
+                transportCtx.fillText(`${route.amount}`, midX, midY - 5);
+            });
+
+            // Draw warehouses (blue)
+            warehouses.forEach(w => {
+                transportCtx.fillStyle = '#3b82f6';
+                transportCtx.beginPath();
+                transportCtx.arc(w.x, w.y, 20, 0, Math.PI * 2);
+                transportCtx.fill();
+                transportCtx.fillStyle = 'white';
+                transportCtx.font = 'bold 14px sans-serif';
+                transportCtx.textAlign = 'center';
+                transportCtx.textBaseline = 'middle';
+                transportCtx.fillText(w.supply, w.x, w.y);
+            });
+
+            // Draw bases (red)
+            bases.forEach(b => {
+                transportCtx.fillStyle = '#ef4444';
+                transportCtx.beginPath();
+                transportCtx.arc(b.x, b.y, 20, 0, Math.PI * 2);
+                transportCtx.fill();
+                transportCtx.fillStyle = 'white';
+                transportCtx.font = 'bold 14px sans-serif';
+                transportCtx.textAlign = 'center';
+                transportCtx.textBaseline = 'middle';
+                transportCtx.fillText(b.demand, b.x, b.y);
+            });
+        }
+
+        function solveTransport() {
+            if (warehouses.length === 0 || bases.length === 0) {
+                alert('Please add at least one warehouse and one base!');
+                return;
+            }
+
+            routes = [];
+            let totalCost = 0;
+            let totalShipped = 0;
+
+            // Reset warehouse supplies
+            warehouses.forEach(w => w.supply = w.originalSupply);
+
+            // Simple nearest-neighbor solution
+            bases.forEach(base => {
+                let remaining = base.demand;
+                
+                warehouses.forEach(warehouse => {
+                    if (warehouse.supply > 0 && remaining > 0) {
+                        const amount = Math.min(warehouse.supply, remaining);
+                        const distance = Math.sqrt(
+                            Math.pow(warehouse.x - base.x, 2) + 
+                            Math.pow(warehouse.y - base.y, 2)
+                        );
+                        
+                        routes.push({
+                            from: warehouse,
+                            to: base,
+                            amount: amount
+                        });
+                        
+                        warehouse.supply -= amount;
+                        remaining -= amount;
+                        totalCost += amount * distance * 0.05;
+                        totalShipped += amount;
+                    }
+                });
+            });
+
+            drawTransport();
+
+            const totalSupply = warehouses.reduce((sum, w) => sum + w.originalSupply, 0);
+            const totalDemand = bases.reduce((sum, b) => sum + b.demand, 0);
+
+            document.getElementById('transportResult').style.display = 'block';
+            document.getElementById('transportSolution').innerHTML = `
+                <strong>${routes.length} optimal shipping routes created!</strong><br>
+                Total units shipped: <strong style="color: var(--accent-gold);">${totalShipped}</strong><br>
+                Total warehouse supply: <strong>${totalSupply}</strong> | Total base demand: <strong>${totalDemand}</strong><br>
+                Estimated transportation cost: <strong style="color: var(--accent-gold);">$${totalCost.toFixed(2)}</strong><br>
+                <em style="font-size: 0.95rem; color: var(--text-muted); margin-top: 1rem; display: block;">
+                    This demonstrates how Dantzig's linear programming finds the most efficient solution by minimizing total cost while meeting all constraints!
+                </em>
+            `;
+        }
+
+        function resetTransport() {
+            warehouses = [];
+            bases = [];
+            routes = [];
+            if (transportCtx) {
+                transportCtx.clearRect(0, 0, transportCanvas.width, transportCanvas.height);
+            }
+            document.getElementById('transportResult').style.display = 'none';
+        }
+
+        // Initialize transport canvas
+        if (transportCanvas) {
+            transportCanvas.width = 800;
+            transportCanvas.height = 400;
+            drawTransport();
+        }
+
+        function createConfetti() {
+            const colors = ['#3b82f6', '#8b5cf6', '#f59e0b', '#10b981', '#ef4444'];
+            const mathSymbols = ['∑', '∫', 'π', '∞', 'λ', 'Δ'];
+            for (let i = 0; i < 60; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '12px';
+                confetti.style.height = '12px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-30px';
+                confetti.style.opacity = '1';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.zIndex = '10000';
+                confetti.style.borderRadius = '50%';
+                confetti.textContent = mathSymbols[Math.floor(Math.random() * mathSymbols.length)];
+                confetti.style.fontSize = '14px';
+                confetti.style.color = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.display = 'flex';
+                confetti.style.alignItems = 'center';
+                confetti.style.justifyContent = 'center';
+                confetti.style.fontFamily = 'JetBrains Mono, monospace';
+                confetti.style.fontWeight = 'bold';
+                document.body.appendChild(confetti);
+                
+                const xVel = (Math.random() - 0.5) * 12;
+                const yVel = Math.random() * 4 + 6;
+                const rotation = Math.random() * 360;
+                
+                let posY = -30;
+                let posX = parseFloat(confetti.style.left);
+                let currentRotation = 0;
+                
+                const interval = setInterval(() => {
+                    posY += yVel;
+                    posX += xVel;
+                    currentRotation += rotation / 50;
+                    
+                    confetti.style.top = posY + 'px';
+                    confetti.style.left = posX + 'px';
+                    confetti.style.transform = `rotate(${currentRotation}deg)`;
+                    confetti.style.opacity = Math.max(0, 1 - posY / window.innerHeight);
+                    
+                    if (posY > window.innerHeight) {
+                        clearInterval(interval);
+                        confetti.remove();
+                    }
+                }, 20);
+            }
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Parallax for hero equations
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const equations = document.querySelectorAll('.equation');
+            
+            equations.forEach((eq, index) => {
+                const speed = 0.3 + (index * 0.05);
+                const yPos = -(scrolled * speed);
+                const rotation = scrolled * 0.05;
+                eq.style.transform = `translateY(${yPos}px) rotate(${rotation}deg)`;
+            });
+        });
+
+        // Equation click effect with math ripple
+        document.querySelectorAll('.equation').forEach(eq => {
+            eq.addEventListener('click', function(event) {
+                this.style.animation = 'none';
+                setTimeout(() => {
+                    this.style.animation = '';
+                }, 10);
+                
+                // Create mathematical symbol ripple
+                const symbols = ['∑', '∫', 'π', '∞'];
+                for (let i = 0; i < 4; i++) {
+                    const ripple = document.createElement('div');
+                    ripple.style.position = 'fixed';
+                    ripple.style.left = event.clientX + 'px';
+                    ripple.style.top = event.clientY + 'px';
+                    ripple.style.color = '#f59e0b';
+                    ripple.style.fontSize = '24px';
+                    ripple.style.fontFamily = 'JetBrains Mono, monospace';
+                    ripple.style.fontWeight = 'bold';
+                    ripple.style.transform = 'translate(-50%, -50%)';
+                    ripple.style.pointerEvents = 'none';
+                    ripple.style.zIndex = '9999';
+                    ripple.textContent = symbols[i];
+                    document.body.appendChild(ripple);
+                    
+                    const angle = (i / 4) * Math.PI * 2;
+                    let distance = 0;
+                    const interval = setInterval(() => {
+                        distance += 5;
+                        const x = event.clientX + Math.cos(angle) * distance;
+                        const y = event.clientY + Math.sin(angle) * distance;
+                        ripple.style.left = x + 'px';
+                        ripple.style.top = y + 'px';
+                        ripple.style.opacity = Math.max(0, 1 - distance / 150);
+                        ripple.style.transform = `translate(-50%, -50%) rotate(${distance * 3}deg) scale(${1 + distance / 100})`;
+                        
+                        if (distance > 150) {
+                            clearInterval(interval);
+                            ripple.remove();
+                        }
+                    }, 20);
+                }
+            });
+        });
+
+        // Add 3D tilt effect to app cards with mouse tracking
+        document.querySelectorAll('.app-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const deltaX = (x - centerX) / centerX;
+                const deltaY = (y - centerY) / centerY;
+                
+                card.style.transform = `
+                    translateY(-20px) 
+                    scale(1.05) 
+                    rotateY(${deltaX * 15}deg) 
+                    rotateX(${-deltaY * 15}deg)
+                `;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+
+        // ====================================
+        // DIET PROBLEM SOLVER
+        // ====================================
+        
+        const foods = [
+            { name: 'Chicken Breast', icon: '🍗', calories: 165, protein: 31, fiber: 0, cost: 3.50 },
+            { name: 'Brown Rice', icon: '🍚', calories: 216, protein: 5, fiber: 3.5, cost: 0.80 },
+            { name: 'Broccoli', icon: '🥦', calories: 55, protein: 4, fiber: 5, cost: 1.20 },
+            { name: 'Eggs', icon: '🥚', calories: 155, protein: 13, fiber: 0, cost: 2.00 },
+            { name: 'Oatmeal', icon: '🥣', calories: 150, protein: 5, fiber: 4, cost: 1.00 },
+            { name: 'Salmon', icon: '🐟', calories: 206, protein: 22, fiber: 0, cost: 6.00 },
+            { name: 'Almonds', icon: '🌰', calories: 164, protein: 6, fiber: 3.5, cost: 4.50 },
+            { name: 'Spinach', icon: '🥬', calories: 23, protein: 3, fiber: 2.2, cost: 1.50 }
+        ];
+
+        function initializeDietProblem() {
+            const grid = document.getElementById('dietFoodGrid');
+            grid.innerHTML = foods.map((food, index) => `
+                <div style="background: rgba(59, 130, 246, 0.1); padding: 1.5rem; border-radius: 1rem; border: 2px solid var(--border-subtle); transition: all 0.3s ease; cursor: pointer;" 
+                     onmouseenter="this.style.borderColor='var(--accent-primary)'; this.style.transform='translateY(-5px)'" 
+                     onmouseleave="this.style.borderColor='var(--border-subtle)'; this.style.transform='translateY(0)'">
+                    <div style="font-size: 3rem; text-align: center; margin-bottom: 0.5rem;">${food.icon}</div>
+                    <h4 style="font-size: 1.1rem; color: var(--text-primary); text-align: center; margin-bottom: 1rem;">${food.name}</h4>
+                    <div style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+                        <div>Cal: ${food.calories} | Pro: ${food.protein}g</div>
+                        <div>Fiber: ${food.fiber}g | $${food.cost.toFixed(2)}/serving</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function solveDietProblem() {
+            const minCalories = parseInt(document.getElementById('minCalories').value);
+            const minProtein = parseInt(document.getElementById('minProtein').value);
+            const minFiber = parseInt(document.getElementById('minFiber').value);
+
+            // Simple greedy heuristic: prioritize foods by cost-effectiveness
+            let selectedFoods = [];
+            let totalCost = 0;
+            let totalCalories = 0;
+            let totalProtein = 0;
+            let totalFiber = 0;
+
+            // Calculate efficiency scores
+            const rankedFoods = foods.map(food => ({
+                ...food,
+                efficiency: (food.calories + food.protein * 10 + food.fiber * 10) / food.cost
+            })).sort((a, b) => b.efficiency - a.efficiency);
+
+            // Greedy allocation
+            while (totalCalories < minCalories || totalProtein < minProtein || totalFiber < minFiber) {
+                for (let food of rankedFoods) {
+                    const needed = (totalCalories < minCalories) || (totalProtein < minProtein) || (totalFiber < minFiber);
+                    if (needed) {
+                        const existing = selectedFoods.find(f => f.name === food.name);
+                        if (existing) {
+                            existing.servings += 0.5;
+                        } else {
+                            selectedFoods.push({ ...food, servings: 0.5 });
+                        }
+                        totalCost += food.cost * 0.5;
+                        totalCalories += food.calories * 0.5;
+                        totalProtein += food.protein * 0.5;
+                        totalFiber += food.fiber * 0.5;
+                    }
+                }
+                
+                // Safety check to prevent infinite loop
+                if (selectedFoods.reduce((sum, f) => sum + f.servings, 0) > 50) break;
+            }
+
+            // Display results
+            const resultDiv = document.getElementById('dietResult');
+            const solutionDiv = document.getElementById('dietSolution');
+            
+            resultDiv.style.display = 'block';
+            solutionDiv.innerHTML = `
+                <div style="margin-bottom: 2rem;">
+                    <h5 style="font-size: 1.3rem; color: var(--accent-gold); margin-bottom: 1rem;">💰 Total Daily Cost: $${totalCost.toFixed(2)}</h5>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                        <div style="background: rgba(59, 130, 246, 0.2); padding: 1rem; border-radius: 0.5rem;">
+                            <div style="font-size: 0.9rem; color: var(--text-muted);">Calories</div>
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--accent-primary);">${Math.round(totalCalories)}</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">Required: ${minCalories}</div>
+                        </div>
+                        <div style="background: rgba(139, 92, 246, 0.2); padding: 1rem; border-radius: 0.5rem;">
+                            <div style="font-size: 0.9rem; color: var(--text-muted);">Protein</div>
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--accent-secondary);">${Math.round(totalProtein)}g</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">Required: ${minProtein}g</div>
+                        </div>
+                        <div style="background: rgba(245, 158, 11, 0.2); padding: 1rem; border-radius: 0.5rem;">
+                            <div style="font-size: 0.9rem; color: var(--text-muted);">Fiber</div>
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--accent-gold);">${Math.round(totalFiber)}g</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">Required: ${minFiber}g</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h5 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem;">📋 Recommended Servings:</h5>
+                <div style="display: grid; gap: 0.8rem;">
+                    ${selectedFoods.map(food => `
+                        <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <span style="font-size: 1.5rem; margin-right: 0.5rem;">${food.icon}</span>
+                                <strong>${food.name}</strong>
+                            </div>
+                            <div style="color: var(--accent-gold); font-weight: bold;">
+                                ${food.servings.toFixed(1)} servings
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(59, 130, 246, 0.1); border-radius: 0.8rem; border-left: 4px solid var(--accent-primary);">
+                    <strong style="color: var(--accent-primary);">💡 How this works:</strong> 
+                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">
+                        Linear programming finds the minimum-cost combination of foods that satisfies all your nutritional constraints. 
+                        This simplified solver uses a greedy heuristic—the actual Simplex Method would guarantee the global optimum!
+                    </p>
+                </div>
+            `;
+
+            // Scroll to results
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // ====================================
+        // CORNER POINT EXPLORER
+        // ====================================
+        
+        const cornerCanvas = document.getElementById('cornerCanvas');
+        const cornerCtx = cornerCanvas ? cornerCanvas.getContext('2d') : null;
+        let showCornerLabels = true;
+        let cornerPoints = [];
+        let optimalPoint = null;
+        let simplexPath = [];
+        let animationFrame = 0;
+        let isAnimating = false;
+
+        function updateCornerVisualization() {
+            if (!cornerCtx) return;
+
+            const c1 = parseInt(document.getElementById('constraint1').value);
+            const c2 = parseInt(document.getElementById('constraint2').value);
+            const c3 = parseInt(document.getElementById('constraint3').value);
+            
+            document.getElementById('c1Value').textContent = c1;
+            document.getElementById('c2Value').textContent = c2;
+            document.getElementById('c3Value').textContent = c3;
+
+            drawCornerVisualization(c1, c2, c3);
+        }
+
+        function drawCornerVisualization(c1, c2, c3) {
+            if (!cornerCtx) return;
+
+            cornerCtx.clearRect(0, 0, cornerCanvas.width, cornerCanvas.height);
+
+            const width = cornerCanvas.width;
+            const height = cornerCanvas.height;
+            const padding = 60;
+            const maxX = 12;
+            const maxY = 12;
+
+            function toCanvasX(x) {
+                return padding + (x / maxX) * (width - 2 * padding);
+            }
+
+            function toCanvasY(y) {
+                return height - padding - (y / maxY) * (height - 2 * padding);
+            }
+
+            // Grid
+            cornerCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            cornerCtx.lineWidth = 1;
+            for (let i = 0; i <= maxX; i++) {
+                cornerCtx.beginPath();
+                cornerCtx.moveTo(toCanvasX(i), padding);
+                cornerCtx.lineTo(toCanvasX(i), height - padding);
+                cornerCtx.stroke();
+            }
+            for (let i = 0; i <= maxY; i++) {
+                cornerCtx.beginPath();
+                cornerCtx.moveTo(padding, toCanvasY(i));
+                cornerCtx.lineTo(width - padding, toCanvasY(i));
+                cornerCtx.stroke();
+            }
+
+            // Axes
+            cornerCtx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+            cornerCtx.lineWidth = 2;
+            cornerCtx.beginPath();
+            cornerCtx.moveTo(padding, height - padding);
+            cornerCtx.lineTo(width - padding, height - padding);
+            cornerCtx.stroke();
+            cornerCtx.beginPath();
+            cornerCtx.moveTo(padding, padding);
+            cornerCtx.lineTo(padding, height - padding);
+            cornerCtx.stroke();
+
+            // Axis labels
+            cornerCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            cornerCtx.font = '14px sans-serif';
+            cornerCtx.fillText('x', width - padding + 10, height - padding + 5);
+            cornerCtx.fillText('y', padding - 10, padding - 10);
+
+            // Find corner points
+            cornerPoints = [];
+            
+            // Intersection points
+            const points = [
+                { x: 0, y: 0 },
+                { x: c3, y: 0 },
+                { x: 0, y: c1 },
+                { x: 0, y: c2 }
+            ];
+
+            // x + y = c1, x = 0
+            if (c1 >= 0) points.push({ x: 0, y: c1 });
+            
+            // x + y = c1, y = 0
+            if (c1 >= 0) points.push({ x: c1, y: 0 });
+            
+            // x + y = c1, x = c3
+            if (c3 <= c1) points.push({ x: c3, y: c1 - c3 });
+            
+            // 2x + y = c2, x = 0
+            if (c2 >= 0) points.push({ x: 0, y: c2 });
+            
+            // 2x + y = c2, y = 0
+            if (c2 >= 0) points.push({ x: c2 / 2, y: 0 });
+            
+            // 2x + y = c2, x = c3
+            if (c3 * 2 <= c2) points.push({ x: c3, y: c2 - 2 * c3 });
+            
+            // x + y = c1, 2x + y = c2
+            const x_intersect = c2 - c1;
+            const y_intersect = 2 * c1 - c2;
+            if (x_intersect >= 0 && y_intersect >= 0 && x_intersect <= c3) {
+                points.push({ x: x_intersect, y: y_intersect });
+            }
+
+            // Filter valid points
+            cornerPoints = points.filter(p => 
+                p.x >= 0 && p.y >= 0 && 
+                p.x <= c3 &&
+                p.x + p.y <= c1 + 0.01 &&
+                2 * p.x + p.y <= c2 + 0.01
+            );
+
+            // Remove duplicates
+            cornerPoints = cornerPoints.filter((p, i, arr) => 
+                arr.findIndex(q => Math.abs(q.x - p.x) < 0.1 && Math.abs(q.y - p.y) < 0.1) === i
+            );
+
+            // Calculate objective values
+            cornerPoints.forEach(p => {
+                p.value = 3 * p.x + 4 * p.y;
+            });
+
+            // Find optimal
+            optimalPoint = cornerPoints.reduce((best, p) => 
+                (best === null || p.value > best.value) ? p : best, null
+            );
+
+            // Draw feasible region
+            if (cornerPoints.length > 0) {
+                const hull = convexHull(cornerPoints);
+                cornerCtx.fillStyle = 'rgba(59, 130, 246, 0.2)';
+                cornerCtx.strokeStyle = 'rgba(59, 130, 246, 0.6)';
+                cornerCtx.lineWidth = 3;
+                cornerCtx.beginPath();
+                hull.forEach((p, i) => {
+                    const x = toCanvasX(p.x);
+                    const y = toCanvasY(p.y);
+                    if (i === 0) cornerCtx.moveTo(x, y);
+                    else cornerCtx.lineTo(x, y);
+                });
+                cornerCtx.closePath();
+                cornerCtx.fill();
+                cornerCtx.stroke();
+            }
+
+            // Draw constraint lines
+            cornerCtx.strokeStyle = 'rgba(139, 92, 246, 0.5)';
+            cornerCtx.lineWidth = 2;
+            cornerCtx.setLineDash([5, 5]);
+
+            // x + y = c1
+            cornerCtx.beginPath();
+            cornerCtx.moveTo(toCanvasX(0), toCanvasY(c1));
+            cornerCtx.lineTo(toCanvasX(c1), toCanvasY(0));
+            cornerCtx.stroke();
+
+            // 2x + y = c2
+            cornerCtx.beginPath();
+            cornerCtx.moveTo(toCanvasX(0), toCanvasY(c2));
+            cornerCtx.lineTo(toCanvasX(c2/2), toCanvasY(0));
+            cornerCtx.stroke();
+
+            // x = c3
+            cornerCtx.beginPath();
+            cornerCtx.moveTo(toCanvasX(c3), toCanvasY(0));
+            cornerCtx.lineTo(toCanvasX(c3), toCanvasY(maxY));
+            cornerCtx.stroke();
+
+            cornerCtx.setLineDash([]);
+
+            // Draw corner points
+            cornerPoints.forEach(p => {
+                const x = toCanvasX(p.x);
+                const y = toCanvasY(p.y);
+                const isOptimal = optimalPoint && Math.abs(p.x - optimalPoint.x) < 0.1 && Math.abs(p.y - optimalPoint.y) < 0.1;
+
+                // Glow for optimal
+                if (isOptimal) {
+                    cornerCtx.beginPath();
+                    cornerCtx.arc(x, y, 20, 0, Math.PI * 2);
+                    const gradient = cornerCtx.createRadialGradient(x, y, 0, x, y, 20);
+                    gradient.addColorStop(0, 'rgba(245, 158, 11, 0.4)');
+                    gradient.addColorStop(1, 'rgba(245, 158, 11, 0)');
+                    cornerCtx.fillStyle = gradient;
+                    cornerCtx.fill();
+                }
+
+                cornerCtx.beginPath();
+                cornerCtx.arc(x, y, isOptimal ? 10 : 8, 0, Math.PI * 2);
+                cornerCtx.fillStyle = isOptimal ? '#f59e0b' : '#3b82f6';
+                cornerCtx.fill();
+                cornerCtx.strokeStyle = isOptimal ? '#fbbf24' : '#60a5fa';
+                cornerCtx.lineWidth = 3;
+                cornerCtx.stroke();
+
+                if (showCornerLabels) {
+                    cornerCtx.fillStyle = '#fff';
+                    cornerCtx.font = 'bold 12px sans-serif';
+                    cornerCtx.textAlign = 'center';
+                    cornerCtx.fillText(`(${p.x.toFixed(1)}, ${p.y.toFixed(1)})`, x, y - 15);
+                    cornerCtx.fillText(`z = ${p.value.toFixed(1)}`, x, y + 25);
+                }
+            });
+
+            // Draw simplex path if animating
+            if (isAnimating && simplexPath.length > 1 && animationFrame > 0) {
+                cornerCtx.strokeStyle = '#f59e0b';
+                cornerCtx.lineWidth = 4;
+                cornerCtx.setLineDash([]);
+                
+                for (let i = 0; i < Math.min(animationFrame, simplexPath.length - 1); i++) {
+                    const from = simplexPath[i];
+                    const to = simplexPath[i + 1];
+                    
+                    cornerCtx.beginPath();
+                    cornerCtx.moveTo(toCanvasX(from.x), toCanvasY(from.y));
+                    cornerCtx.lineTo(toCanvasX(to.x), toCanvasY(to.y));
+                    cornerCtx.stroke();
+
+                    // Arrow
+                    const angle = Math.atan2(toCanvasY(to.y) - toCanvasY(from.y), toCanvasX(to.x) - toCanvasX(from.x));
+                    const arrowX = toCanvasX(to.x);
+                    const arrowY = toCanvasY(to.y);
+                    
+                    cornerCtx.beginPath();
+                    cornerCtx.moveTo(arrowX, arrowY);
+                    cornerCtx.lineTo(arrowX - 15 * Math.cos(angle - Math.PI / 6), arrowY - 15 * Math.sin(angle - Math.PI / 6));
+                    cornerCtx.moveTo(arrowX, arrowY);
+                    cornerCtx.lineTo(arrowX - 15 * Math.cos(angle + Math.PI / 6), arrowY - 15 * Math.sin(angle + Math.PI / 6));
+                    cornerCtx.stroke();
+                }
+            }
+        }
+
+        function convexHull(points) {
+            if (points.length < 3) return points;
+            
+            const sorted = [...points].sort((a, b) => a.x - b.x || a.y - b.y);
+            const lower = [];
+            
+            for (let p of sorted) {
+                while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) {
+                    lower.pop();
+                }
+                lower.push(p);
+            }
+            
+            const upper = [];
+            for (let i = sorted.length - 1; i >= 0; i--) {
+                const p = sorted[i];
+                while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) {
+                    upper.pop();
+                }
+                upper.push(p);
+            }
+            
+            upper.pop();
+            lower.pop();
+            return lower.concat(upper);
+        }
+
+        function cross(o, a, b) {
+            return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+        }
+
+        function animateSimplexPath() {
+            if (cornerPoints.length === 0) return;
+
+            // Create simplex path (start at origin, walk to optimal)
+            simplexPath = [{ x: 0, y: 0 }];
+            
+            let current = simplexPath[0];
+            const visited = new Set();
+            
+            while (true) {
+                visited.add(`${current.x},${current.y}`);
+                
+                // Find best neighbor
+                let bestNeighbor = null;
+                let bestValue = 3 * current.x + 4 * current.y;
+                
+                for (let p of cornerPoints) {
+                    if (visited.has(`${p.x},${p.y}`)) continue;
+                    if (p.value > bestValue) {
+                        bestValue = p.value;
+                        bestNeighbor = p;
+                    }
+                }
+                
+                if (!bestNeighbor) break;
+                simplexPath.push(bestNeighbor);
+                current = bestNeighbor;
+            }
+
+            // Animate
+            isAnimating = true;
+            animationFrame = 0;
+            
+            const animate = () => {
+                animationFrame++;
+                updateCornerVisualization();
+                
+                if (animationFrame <= simplexPath.length) {
+                    setTimeout(animate, 800);
+                } else {
+                    isAnimating = false;
+                    updateCornerVisualization();
+                }
+            };
+            
+            animate();
+
+            // Update info
+            document.getElementById('cornerInfoContent').innerHTML = `
+                <strong style="color: var(--accent-gold);">Simplex Path Animation:</strong><br>
+                The algorithm starts at the origin (0, 0) and intelligently moves to adjacent corner points,
+                always choosing the direction that improves the objective function. After ${simplexPath.length - 1} steps,
+                it reaches the optimal solution at (${optimalPoint.x.toFixed(1)}, ${optimalPoint.y.toFixed(1)}) 
+                with value z = ${optimalPoint.value.toFixed(1)}.
+            `;
+        }
+
+        function toggleCornerLabels() {
+            showCornerLabels = !showCornerLabels;
+            updateCornerVisualization();
+        }
+
+        function resetCornerExplorer() {
+            document.getElementById('constraint1').value = 8;
+            document.getElementById('constraint2').value = 12;
+            document.getElementById('constraint3').value = 6;
+            isAnimating = false;
+            animationFrame = 0;
+            simplexPath = [];
+            updateCornerVisualization();
+            document.getElementById('cornerInfoContent').innerHTML = 
+                'Click on corner points to see their coordinates and objective function values!';
+        }
+
+        // Initialize corner explorer
+        if (cornerCanvas) {
+            cornerCanvas.width = 800;
+            cornerCanvas.height = 500;
+            updateCornerVisualization();
+
+            // Click handler
+            cornerCanvas.addEventListener('click', (e) => {
+                const rect = cornerCanvas.getBoundingClientRect();
+                const scaleX = cornerCanvas.width / rect.width;
+                const scaleY = cornerCanvas.height / rect.height;
+                const clickX = (e.clientX - rect.left) * scaleX;
+                const clickY = (e.clientY - rect.top) * scaleY;
+
+                const padding = 60;
+                const width = cornerCanvas.width;
+                const height = cornerCanvas.height;
+                const maxX = 12;
+                const maxY = 12;
+
+                function toCanvasX(x) {
+                    return padding + (x / maxX) * (width - 2 * padding);
+                }
+
+                function toCanvasY(y) {
+                    return height - padding - (y / maxY) * (height - 2 * padding);
+                }
+
+                // Find clicked corner
+                for (let p of cornerPoints) {
+                    const px = toCanvasX(p.x);
+                    const py = toCanvasY(p.y);
+                    const dist = Math.sqrt((clickX - px) ** 2 + (clickY - py) ** 2);
+                    
+                    if (dist < 15) {
+                        const isOptimal = optimalPoint && Math.abs(p.x - optimalPoint.x) < 0.1 && Math.abs(p.y - optimalPoint.y) < 0.1;
+                        document.getElementById('cornerInfoContent').innerHTML = `
+                            <strong style="color: var(--accent-${isOptimal ? 'gold' : 'primary'});">
+                                ${isOptimal ? '⭐ OPTIMAL CORNER POINT' : '📍 Corner Point'}
+                            </strong><br><br>
+                            <strong>Coordinates:</strong> (${p.x.toFixed(2)}, ${p.y.toFixed(2)})<br>
+                            <strong>Objective Value:</strong> z = 3(${p.x.toFixed(2)}) + 4(${p.y.toFixed(2)}) = <strong style="color: var(--accent-gold);">${p.value.toFixed(2)}</strong><br><br>
+                            ${isOptimal ? '<em style="color: var(--accent-gold);">This is the maximum value among all corner points!</em>' : ''}
+                            ${!isOptimal && optimalPoint ? `<br><em>The optimal value is ${optimalPoint.value.toFixed(2)} at (${optimalPoint.x.toFixed(1)}, ${optimalPoint.y.toFixed(1)})</em>` : ''}
+                        `;
+                        break;
+                    }
+                }
+            });
+        }
+
+        // Initialize diet problem
+        initializeDietProblem();
+
+        // ====================================
+        // TRAVELING SALESMAN PROBLEM
+        // ====================================
+        
+        const tspCanvas = document.getElementById('tspCanvas');
+        const tspCtx = tspCanvas ? tspCanvas.getContext('2d') : null;
+        let tspMode = 'manual';
+        let landmarks = [
+            { name: 'Central Park', icon: '🌳', x: 150, y: 120, selected: false },
+            { name: 'Art Museum', icon: '🎨', x: 450, y: 80, selected: false },
+            { name: 'City Hall', icon: '🏛️', x: 500, y: 250, selected: false },
+            { name: 'Science Center', icon: '🔬', x: 750, y: 150, selected: false },
+            { name: 'Botanical Garden', icon: '🌺', x: 200, y: 350, selected: false },
+            { name: 'Historic District', icon: '🏰', x: 600, y: 450, selected: false },
+            { name: 'Waterfront Park', icon: '⛵', x: 850, y: 350, selected: false },
+            { name: 'Observatory', icon: '🔭', x: 300, y: 500, selected: false },
+            { name: 'Zoo', icon: '🦁', x: 700, y: 520, selected: false },
+            { name: 'Downtown Plaza', icon: '🏙️', x: 450, y: 380, selected: false },
+            { name: 'Memorial Park', icon: '🗽', x: 100, y: 450, selected: false },
+            { name: 'Shopping District', icon: '🛍️', x: 550, y: 150, selected: false }
+        ];
+        let manualRoute = [];
+        let optimalRoute = [];
+        let manualDistance = 0;
+        let optimalDistance = 0;
+
+        function initializeLandmarkSelection() {
+            const container = document.getElementById('landmarkSelection');
+            if (!container) return;
+            
+            container.innerHTML = landmarks.map((landmark, index) => `
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 0.8rem; border: 2px solid ${landmark.selected ? 'var(--accent-primary)' : 'var(--border-subtle)'}; cursor: pointer; transition: all 0.3s ease; text-align: center;"
+                     onclick="toggleLandmark(${index})"
+                     onmouseenter="this.style.transform='translateY(-3px)'; this.style.borderColor='var(--accent-primary)'"
+                     onmouseleave="this.style.transform='translateY(0)'; this.style.borderColor='${landmark.selected ? 'var(--accent-primary)' : 'var(--border-subtle)'}'">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">${landmark.icon}</div>
+                    <div style="font-size: 0.95rem; color: var(--text-primary); font-weight: ${landmark.selected ? 'bold' : 'normal'};">
+                        ${landmark.name}
+                    </div>
+                    ${landmark.selected ? '<div style="color: var(--accent-primary); font-size: 0.85rem; margin-top: 0.3rem;">✓ Selected</div>' : ''}
+                </div>
+            `).join('');
+        }
+
+        function toggleLandmark(index) {
+            landmarks[index].selected = !landmarks[index].selected;
+            manualRoute = [];
+            optimalRoute = [];
+            initializeLandmarkSelection();
+            drawTSP();
+            updateTSPStats();
+        }
+
+        function selectRandomLandmarks() {
+            // Deselect all
+            landmarks.forEach(l => l.selected = false);
+            
+            // Select 6 random
+            const indices = [];
+            while (indices.length < 6) {
+                const idx = Math.floor(Math.random() * landmarks.length);
+                if (!indices.includes(idx)) {
+                    indices.push(idx);
+                    landmarks[idx].selected = true;
+                }
+            }
+            
+            manualRoute = [];
+            optimalRoute = [];
+            initializeLandmarkSelection();
+            drawTSP();
+            updateTSPStats();
+        }
+
+        function getSelectedLandmarks() {
+            return landmarks.map((l, i) => ({ ...l, originalIndex: i })).filter(l => l.selected);
+        }
+
+        function setTSPMode(mode) {
+            tspMode = mode;
+            if (mode === 'manual') {
+                manualRoute = [];
+                drawTSP();
+            }
+        }
+
+        function drawTSP() {
+            if (!tspCtx) return;
+
+            const width = tspCanvas.width;
+            const height = tspCanvas.height;
+
+            tspCtx.clearRect(0, 0, width, height);
+
+            // Draw map-style background
+            // Streets
+            tspCtx.strokeStyle = '#c4c1b8';
+            tspCtx.lineWidth = 8;
+            tspCtx.lineCap = 'round';
+            
+            // Horizontal streets
+            for (let y = 100; y < height; y += 150) {
+                tspCtx.beginPath();
+                tspCtx.moveTo(0, y);
+                tspCtx.lineTo(width, y);
+                tspCtx.stroke();
+            }
+            
+            // Vertical streets
+            for (let x = 150; x < width; x += 200) {
+                tspCtx.beginPath();
+                tspCtx.moveTo(x, 0);
+                tspCtx.lineTo(x, height);
+                tspCtx.stroke();
+            }
+
+            // Smaller streets
+            tspCtx.lineWidth = 4;
+            tspCtx.strokeStyle = '#d4d2cc';
+            for (let y = 50; y < height; y += 75) {
+                if (y % 150 !== 100) {
+                    tspCtx.beginPath();
+                    tspCtx.moveTo(0, y);
+                    tspCtx.lineTo(width, y);
+                    tspCtx.stroke();
+                }
+            }
+            for (let x = 100; x < width; x += 100) {
+                if ((x - 150) % 200 !== 0) {
+                    tspCtx.beginPath();
+                    tspCtx.moveTo(x, 0);
+                    tspCtx.lineTo(x, height);
+                    tspCtx.stroke();
+                }
+            }
+
+            // Parks/green areas (decorative)
+            tspCtx.fillStyle = '#c8e6c9';
+            tspCtx.fillRect(50, 50, 120, 100);
+            tspCtx.fillRect(600, 400, 150, 120);
+            
+            const selectedLandmarks = getSelectedLandmarks();
+
+            // Draw optimal route
+            if (optimalRoute.length > 0) {
+                tspCtx.strokeStyle = '#f59e0b';
+                tspCtx.lineWidth = 6;
+                tspCtx.setLineDash([]);
+                tspCtx.globalAlpha = 0.8;
+                
+                tspCtx.beginPath();
+                optimalRoute.forEach((landmarkIndex, i) => {
+                    const landmark = selectedLandmarks[landmarkIndex];
+                    if (i === 0) {
+                        tspCtx.moveTo(landmark.x, landmark.y);
+                    } else {
+                        tspCtx.lineTo(landmark.x, landmark.y);
+                    }
+                });
+                
+                if (optimalRoute.length > 0) {
+                    const firstLandmark = selectedLandmarks[optimalRoute[0]];
+                    tspCtx.lineTo(firstLandmark.x, firstLandmark.y);
+                }
+                tspCtx.stroke();
+                tspCtx.globalAlpha = 1;
+
+                // Draw direction arrows on optimal route
+                for (let i = 0; i < optimalRoute.length; i++) {
+                    const fromLandmark = selectedLandmarks[optimalRoute[i]];
+                    const toLandmark = selectedLandmarks[optimalRoute[(i + 1) % optimalRoute.length]];
+                    
+                    const midX = (fromLandmark.x + toLandmark.x) / 2;
+                    const midY = (fromLandmark.y + toLandmark.y) / 2;
+                    const angle = Math.atan2(toLandmark.y - fromLandmark.y, toLandmark.x - fromLandmark.x);
+                    
+                    tspCtx.fillStyle = '#f59e0b';
+                    tspCtx.beginPath();
+                    tspCtx.moveTo(midX, midY);
+                    tspCtx.lineTo(midX - 12 * Math.cos(angle - Math.PI / 6), midY - 12 * Math.sin(angle - Math.PI / 6));
+                    tspCtx.lineTo(midX - 12 * Math.cos(angle + Math.PI / 6), midY - 12 * Math.sin(angle + Math.PI / 6));
+                    tspCtx.closePath();
+                    tspCtx.fill();
+                }
+            }
+
+            // Draw manual route
+            if (manualRoute.length > 1) {
+                tspCtx.strokeStyle = '#8b5cf6';
+                tspCtx.lineWidth = 6;
+                tspCtx.setLineDash([15, 8]);
+                
+                tspCtx.beginPath();
+                manualRoute.forEach((landmarkIndex, i) => {
+                    const landmark = selectedLandmarks[landmarkIndex];
+                    if (i === 0) {
+                        tspCtx.moveTo(landmark.x, landmark.y);
+                    } else {
+                        tspCtx.lineTo(landmark.x, landmark.y);
+                    }
+                });
+                tspCtx.stroke();
+                tspCtx.setLineDash([]);
+
+                // If route is complete, close it
+                if (manualRoute.length === selectedLandmarks.length) {
+                    const firstLandmark = selectedLandmarks[manualRoute[0]];
+                    const lastLandmark = selectedLandmarks[manualRoute[manualRoute.length - 1]];
+                    tspCtx.strokeStyle = '#8b5cf6';
+                    tspCtx.setLineDash([15, 8]);
+                    tspCtx.beginPath();
+                    tspCtx.moveTo(lastLandmark.x, lastLandmark.y);
+                    tspCtx.lineTo(firstLandmark.x, firstLandmark.y);
+                    tspCtx.stroke();
+                    tspCtx.setLineDash([]);
+                }
+            }
+
+            // Draw all landmarks
+            landmarks.forEach((landmark, index) => {
+                if (!landmark.selected) return;
+                
+                const selectedIndex = selectedLandmarks.findIndex(l => l.originalIndex === index);
+                const inManualRoute = manualRoute.includes(selectedIndex);
+                const inOptimalRoute = optimalRoute.includes(selectedIndex);
+                
+                // Glow effect
+                if (inOptimalRoute || inManualRoute) {
+                    tspCtx.beginPath();
+                    tspCtx.arc(landmark.x, landmark.y, 35, 0, Math.PI * 2);
+                    const gradient = tspCtx.createRadialGradient(landmark.x, landmark.y, 0, landmark.x, landmark.y, 35);
+                    gradient.addColorStop(0, inOptimalRoute ? 'rgba(245, 158, 11, 0.4)' : 'rgba(139, 92, 246, 0.4)');
+                    gradient.addColorStop(1, 'rgba(245, 158, 11, 0)');
+                    tspCtx.fillStyle = gradient;
+                    tspCtx.fill();
+                }
+
+                // Landmark pin background
+                tspCtx.beginPath();
+                tspCtx.arc(landmark.x, landmark.y, 22, 0, Math.PI * 2);
+                tspCtx.fillStyle = inOptimalRoute && optimalRoute.length > 0 ? '#f59e0b' : '#3b82f6';
+                tspCtx.fill();
+                tspCtx.strokeStyle = '#fff';
+                tspCtx.lineWidth = 4;
+                tspCtx.stroke();
+
+                // Icon
+                tspCtx.font = '24px sans-serif';
+                tspCtx.textAlign = 'center';
+                tspCtx.textBaseline = 'middle';
+                tspCtx.fillText(landmark.icon, landmark.x, landmark.y);
+
+                // Label
+                tspCtx.fillStyle = '#000';
+                tspCtx.font = 'bold 12px sans-serif';
+                tspCtx.strokeStyle = '#fff';
+                tspCtx.lineWidth = 3;
+                tspCtx.strokeText(landmark.name, landmark.x, landmark.y + 40);
+                tspCtx.fillText(landmark.name, landmark.x, landmark.y + 40);
+
+                // Route order number for manual route
+                if (inManualRoute) {
+                    const orderIndex = manualRoute.indexOf(selectedIndex);
+                    tspCtx.fillStyle = '#fff';
+                    tspCtx.strokeStyle = '#8b5cf6';
+                    tspCtx.lineWidth = 3;
+                    tspCtx.font = 'bold 16px sans-serif';
+                    tspCtx.strokeText((orderIndex + 1).toString(), landmark.x + 28, landmark.y - 28);
+                    tspCtx.fillText((orderIndex + 1).toString(), landmark.x + 28, landmark.y - 28);
+                }
+            });
+        }
+
+        function updateTSPStats() {
+            const selected = getSelectedLandmarks();
+            document.getElementById('tspCityCount').textContent = selected.length;
+        }
+
+        function calculateDistance(route) {
+            if (route.length < 2) return 0;
+            
+            const selected = getSelectedLandmarks();
+            let total = 0;
+            
+            for (let i = 0; i < route.length - 1; i++) {
+                const landmark1 = selected[route[i]];
+                const landmark2 = selected[route[i + 1]];
+                total += Math.sqrt(Math.pow(landmark2.x - landmark1.x, 2) + Math.pow(landmark2.y - landmark1.y, 2));
+            }
+            
+            // Add distance back to start if route is complete
+            if (route.length === selected.length) {
+                const lastLandmark = selected[route[route.length - 1]];
+                const firstLandmark = selected[route[0]];
+                total += Math.sqrt(Math.pow(firstLandmark.x - lastLandmark.x, 2) + Math.pow(firstLandmark.y - lastLandmark.y, 2));
+            }
+            
+            return total;
+        }
+
+        function solveTSP() {
+            const selected = getSelectedLandmarks();
+            
+            if (selected.length < 3) {
+                alert('Please select at least 3 landmarks to visit!');
+                return;
+            }
+
+            // Nearest neighbor heuristic
+            optimalRoute = [0];
+            const unvisited = new Set(selected.map((_, i) => i).slice(1));
+            
+            while (unvisited.size > 0) {
+                const current = optimalRoute[optimalRoute.length - 1];
+                const currentLandmark = selected[current];
+                
+                let nearest = null;
+                let minDist = Infinity;
+                
+                for (let landmarkIndex of unvisited) {
+                    const landmark = selected[landmarkIndex];
+                    const dist = Math.sqrt(Math.pow(landmark.x - currentLandmark.x, 2) + Math.pow(landmark.y - currentLandmark.y, 2));
+                    if (dist < minDist) {
+                        minDist = dist;
+                        nearest = landmarkIndex;
+                    }
+                }
+                
+                optimalRoute.push(nearest);
+                unvisited.delete(nearest);
+            }
+
+            // 2-opt improvement
+            let improved = true;
+            let iterations = 0;
+            while (improved && iterations < 100) {
+                improved = false;
+                iterations++;
+                for (let i = 1; i < optimalRoute.length - 1; i++) {
+                    for (let j = i + 1; j < optimalRoute.length; j++) {
+                        const newRoute = [...optimalRoute];
+                        const segment = newRoute.slice(i, j + 1).reverse();
+                        newRoute.splice(i, j - i + 1, ...segment);
+                        
+                        const newDist = calculateDistance(newRoute);
+                        const oldDist = calculateDistance(optimalRoute);
+                        
+                        if (newDist < oldDist) {
+                            optimalRoute = newRoute;
+                            improved = true;
+                        }
+                    }
+                }
+            }
+
+            optimalDistance = calculateDistance(optimalRoute);
+            document.getElementById('tspOptimalDistance').textContent = Math.round(optimalDistance) + ' km';
+
+            drawTSP();
+
+            // Show results
+            const resultDiv = document.getElementById('tspResult');
+            const resultContent = document.getElementById('tspResultContent');
+            resultDiv.style.display = 'block';
+
+            let comparison = '';
+            if (manualRoute.length === selected.length) {
+                const improvement = ((manualDistance - optimalDistance) / manualDistance * 100);
+                if (improvement > 0.5) {
+                    comparison = `<br><strong style="color: var(--accent-gold);">Your route was ${improvement.toFixed(1)}% longer than optimal.</strong> Great effort! Optimization algorithms can find patterns humans might miss.`;
+                } else if (improvement < -0.5) {
+                    comparison = `<br><strong style="color: #10b981;">Wow! Your route is actually better than our heuristic found!</strong> The nearest-neighbor algorithm isn't perfect—you found a superior solution! 🎉`;
+                } else {
+                    comparison = `<br><strong style="color: #10b981;">Incredible! You found a near-optimal route!</strong> You have excellent spatial reasoning! 🏆`;
+                }
+            }
+
+            const routeNames = optimalRoute.map(i => selected[i].name).join(' → ');
+
+            resultContent.innerHTML = `
+                <strong>Optimal tour route calculated!</strong><br><br>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <div style="color: var(--text-muted);">Total Distance:</div>
+                        <div style="font-size: 1.5rem; color: var(--accent-gold); font-weight: bold;">${Math.round(optimalDistance)} km</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted);">Landmarks Visited:</div>
+                        <div style="font-size: 1.5rem; color: var(--accent-primary); font-weight: bold;">${selected.length}</div>
+                    </div>
+                </div>
+                <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                    <div style="color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.9rem;">Optimal Route:</div>
+                    <div style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">${routeNames} → ${selected[0].name}</div>
+                </div>
+                ${comparison}
+            `;
+
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function resetTSP() {
+            landmarks.forEach(l => l.selected = false);
+            manualRoute = [];
+            optimalRoute = [];
+            manualDistance = 0;
+            optimalDistance = 0;
+            initializeLandmarkSelection();
+            drawTSP();
+            updateTSPStats();
+            document.getElementById('tspResult').style.display = 'none';
+            document.getElementById('tspManualDistance').textContent = '-';
+            document.getElementById('tspOptimalDistance').textContent = '-';
+        }
+
+        // TSP Canvas interactions
+        if (tspCanvas) {
+            tspCanvas.width = 1000;
+            tspCanvas.height = 600;
+            
+            tspCanvas.addEventListener('click', (e) => {
+                const rect = tspCanvas.getBoundingClientRect();
+                const scaleX = tspCanvas.width / rect.width;
+                const scaleY = tspCanvas.height / rect.height;
+                const x = (e.clientX - rect.left) * scaleX;
+                const y = (e.clientY - rect.top) * scaleY;
+
+                const selected = getSelectedLandmarks();
+                
+                if (tspMode === 'manual') {
+                    // Check which landmark was clicked
+                    for (let i = 0; i < selected.length; i++) {
+                        const landmark = selected[i];
+                        const dist = Math.sqrt(Math.pow(x - landmark.x, 2) + Math.pow(y - landmark.y, 2));
+                        if (dist < 25) {
+                            if (!manualRoute.includes(i)) {
+                                manualRoute.push(i);
+                                
+                                // If route is complete, calculate distance
+                                if (manualRoute.length === selected.length) {
+                                    manualDistance = calculateDistance(manualRoute);
+                                    document.getElementById('tspManualDistance').textContent = Math.round(manualDistance) + ' km';
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+                
+                drawTSP();
+            });
+
+            initializeLandmarkSelection();
+            drawTSP();
+        }
+    </script>
+</body>
+</html>
